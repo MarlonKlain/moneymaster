@@ -1,0 +1,2 @@
+//Add Lombok as dependency
+//Finish the models classes
