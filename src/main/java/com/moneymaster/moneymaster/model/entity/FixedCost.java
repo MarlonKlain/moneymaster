@@ -6,4 +6,5 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "Fixed_Costs")
 public class FixedCost {
+
 }
