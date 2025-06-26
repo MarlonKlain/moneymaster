@@ -3,6 +3,7 @@ package com.moneymaster.moneymaster.model.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -15,57 +16,69 @@ public class Budget {
     @Column(name = "budget_id")
     private UUID budgetId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "montlhy_income", nullable = false)
+    @Column(name = "monthly_income", nullable = false)
     private BigDecimal monthlyIncome;
+
+    @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<BudgetCategory> budgetCategories;
 
     public Budget(){
 
     }
 
-    public Budget(UUID budgetId, User user, BigDecimal monthlyIncome){
+    public Budget(UUID budgetId, User user, BigDecimal monthlyIncome, List<BudgetCategory> budgetCategories) {
         this.budgetId = budgetId;
         this.user = user;
         this.monthlyIncome = monthlyIncome;
+        this.budgetCategories = budgetCategories;
     }
 
-    public UUID getBudgetId(){
+    public UUID getBudgetId() {
         return budgetId;
     }
 
-    public User getUser(){
-        return user;
-    }
-
-    public BigDecimal getMonthlyIncome(){
-        return monthlyIncome;
-    }
-
-    public void setBudgetId(UUID budgetId){
+    public void setBudgetId(UUID budgetId) {
         this.budgetId = budgetId;
     }
 
-    public void setUser(User user){
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public void setMonthlyIncome(BigDecimal monthlyIncome){
+    public BigDecimal getMonthlyIncome() {
+        return monthlyIncome;
+    }
+
+    public void setMonthlyIncome(BigDecimal monthlyIncome) {
         this.monthlyIncome = monthlyIncome;
+    }
+
+    public List<BudgetCategory> getBudgetCategories() {
+        return budgetCategories;
+    }
+
+    public void setBudgetCategories(List<BudgetCategory> budgetCategories) {
+        this.budgetCategories = budgetCategories;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Budget budget = (Budget) o;
-        return Objects.equals(budgetId, budget.budgetId) && Objects.equals(user, budget.user) && Objects.equals(monthlyIncome, budget.monthlyIncome);
+        return Objects.equals(budgetId, budget.budgetId) && Objects.equals(user, budget.user) && Objects.equals(monthlyIncome, budget.monthlyIncome) && Objects.equals(budgetCategories, budget.budgetCategories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(budgetId, user, monthlyIncome);
+        return Objects.hash(budgetId, user, monthlyIncome, budgetCategories);
     }
 
     @Override
@@ -74,6 +87,7 @@ public class Budget {
                 "budgetId=" + budgetId +
                 ", user=" + user +
                 ", monthlyIncome=" + monthlyIncome +
+                ", budgetCategories=" + budgetCategories +
                 '}';
     }
 }
