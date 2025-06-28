@@ -25,8 +25,8 @@ public class BudgetCategory {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name= "url")
-    private String url;
+    @Column(name= "imageUrl")
+    private String imageUrl;
 
     @OneToMany(mappedBy = "budgetCategory", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<FixedCost> fixedCosts;
@@ -40,7 +40,7 @@ public class BudgetCategory {
         this.budget = budget;
         this.percentage = percentage;
         this.name = name;
-        this.url = url;
+        this.imageUrl = url;
         this.fixedCosts = fixedCosts;
     }
 
@@ -76,12 +76,12 @@ public class BudgetCategory {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public List<FixedCost> getFixedCosts() {
@@ -96,12 +96,12 @@ public class BudgetCategory {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BudgetCategory that = (BudgetCategory) o;
-        return Objects.equals(budgetCategoryId, that.budgetCategoryId) && Objects.equals(budget, that.budget) && Objects.equals(percentage, that.percentage) && Objects.equals(name, that.name) && Objects.equals(url, that.url) && Objects.equals(fixedCosts, that.fixedCosts);
+        return Objects.equals(budgetCategoryId, that.budgetCategoryId) && Objects.equals(budget, that.budget) && Objects.equals(percentage, that.percentage) && Objects.equals(name, that.name) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(fixedCosts, that.fixedCosts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(budgetCategoryId, budget, percentage, name, url, fixedCosts);
+        return Objects.hash(budgetCategoryId, budget, percentage, name, imageUrl, fixedCosts);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class BudgetCategory {
                 ", budget=" + budget +
                 ", percentage=" + percentage +
                 ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", fixedCosts=" + fixedCosts +
                 '}';
     }
