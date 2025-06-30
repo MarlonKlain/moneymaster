@@ -1,9 +1,10 @@
-package com.moneymaster.moneymaster.model.mappers.fixedcost.impl;
+package com.moneymaster.moneymaster.model.mappers.fixedcost;
 
 import com.moneymaster.moneymaster.model.dto.FixedCostDto;
 import com.moneymaster.moneymaster.model.entity.FixedCost;
-import com.moneymaster.moneymaster.model.mappers.fixedcost.FixedCostMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FixedCostMapperImpl implements FixedCostMapper {
 
     @Override

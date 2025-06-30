@@ -1,12 +1,10 @@
-package com.moneymaster.moneymaster.model.mappers.budgetcategory.impl;
+package com.moneymaster.moneymaster.model.mappers.budgetcategory;
 
 import com.moneymaster.moneymaster.model.dto.BudgetCategoryDto;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
-import com.moneymaster.moneymaster.model.mappers.budgetcategory.BudgetCategoryMapper;
 import com.moneymaster.moneymaster.model.mappers.fixedcost.FixedCostMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 

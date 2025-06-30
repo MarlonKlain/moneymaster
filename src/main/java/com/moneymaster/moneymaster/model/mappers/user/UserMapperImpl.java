@@ -1,18 +1,16 @@
-package com.moneymaster.moneymaster.model.mappers.user.impl;
+package com.moneymaster.moneymaster.model.mappers.user;
 import com.moneymaster.moneymaster.model.dto.user.UserCreateDto;
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
-import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-
+@Component
 public class UserMapperImpl implements UserMapper {
 
     @Override
     public User fromDto(UserCreateDto userCreateDto) {
         return new User(
-                userCreateDto.id(),
+                null,
                 userCreateDto.firstName(),
                 userCreateDto.lastName(),
                 userCreateDto.email(),

@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public record BudgetDto(
         UUID budgetId,
-        User user,
         BigDecimal monthlyIncome,
         List<BudgetCategoryDto> budgetCategories
 ) {
