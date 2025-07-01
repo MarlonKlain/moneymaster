@@ -31,8 +31,8 @@ public class UserController {
         return userMapper.toDto(createUser);
     }
 
-    @DeleteMapping(path = "/{user_id}")
-    public void deleteUser(@PathVariable("user_id") UUID userId){
+    @DeleteMapping(path = "/{userId}")
+    public void deleteUser(@PathVariable("userId") UUID userId){
         userService.deleteUser(userId);
     }
 
@@ -41,4 +41,6 @@ public class UserController {
         List<User> userList = userService.getAllUsers();
         return userList.stream().map(userMapper::toDto).toList();
     }
+
+
 }

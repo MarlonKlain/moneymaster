@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/user/{user_id}/budget")
+@RequestMapping(path = "api/user/{userId}/budget")
 public class BudgetController {
 
     private final BudgetService budgetService;
@@ -24,7 +24,7 @@ public class BudgetController {
 
     @PostMapping
     public BudgetDto createBudget(
-            @PathVariable("user_id") UUID userId,
+            @PathVariable("userId") UUID userId,
             @RequestBody BudgetDto budgetDto
     ){
         Budget createBudget = budgetService.createBudget(userId, budgetMapper.fromDto(budgetDto));
@@ -34,15 +34,15 @@ public class BudgetController {
 
     @GetMapping
     public Optional<BudgetDto> getBudget(
-            @PathVariable("user_id") UUID userId
+            @PathVariable("userId") UUID userId
     ){
         return budgetService.getBudget(userId).map(budgetMapper::toDto);
     }
 
-    @DeleteMapping(path = "/{budget_id}")
+    @DeleteMapping(path = "/{budgetId}")
     public void deleteBudget(
-            @PathVariable("user_id") UUID userID,
-            @PathVariable("budget_id") UUID budgetId
+            @PathVariable("userId") UUID userID,
+            @PathVariable("budgetId") UUID budgetId
     ){
         budgetService.deleteBudget(userID, budgetId);
     }

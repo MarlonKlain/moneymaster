@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public record BudgetCategoryDto(
         UUID budgetCategoryId,
-        Budget budget,
         Double percentage,
         String name,
         String imageUrl,

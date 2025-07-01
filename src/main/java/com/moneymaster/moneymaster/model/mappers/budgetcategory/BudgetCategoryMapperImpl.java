@@ -21,7 +21,7 @@ public class BudgetCategoryMapperImpl implements BudgetCategoryMapper {
     public BudgetCategory fromDto(BudgetCategoryDto budgetCategoryDto) {
         return new BudgetCategory(
                 budgetCategoryDto.budgetCategoryId(),
-                budgetCategoryDto.budget(),
+                null,
                 budgetCategoryDto.percentage(),
                 budgetCategoryDto.name(),
                 budgetCategoryDto.imageUrl(),
@@ -39,7 +39,6 @@ public class BudgetCategoryMapperImpl implements BudgetCategoryMapper {
     public BudgetCategoryDto toDto(BudgetCategory budgetCategory) {
         return new BudgetCategoryDto(
                 budgetCategory.getBudgetCategoryId(),
-                budgetCategory.getBudget(),
                 budgetCategory.getPercentage(),
                 budgetCategory.getName(),
                 budgetCategory.getImageUrl(),
