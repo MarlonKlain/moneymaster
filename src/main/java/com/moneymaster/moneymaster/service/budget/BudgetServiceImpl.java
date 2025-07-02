@@ -52,7 +52,6 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Override
     public Optional<Budget> getBudget(UUID userId) {
-        System.out.println("userId = " + userId);
         return budgetRepository.findByUser_UserId(userId);
     }
 

@@ -8,6 +8,7 @@ import com.moneymaster.moneymaster.service.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -36,10 +37,11 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-    @GetMapping
-    public List<UserResponseDto> getAllUsers(){
-        List<User> userList = userService.getAllUsers();
-        return userList.stream().map(userMapper::toDto).toList();
+    @GetMapping(path = "/{userId}")
+    public Optional<UserResponseDto> getUser(
+            @PathVariable("userId") UUID userId
+    ){
+        return userService.getUser(userId).map(userMapper::toDto);
     }
 
 

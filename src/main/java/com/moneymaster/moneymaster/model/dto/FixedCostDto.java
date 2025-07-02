@@ -8,7 +8,6 @@ import java.util.UUID;
 public record FixedCostDto(
         UUID fixedCostId,
         BigDecimal amount,
-        String description,
-        BudgetCategory budgetCategory
+        String description
 ) {
 }

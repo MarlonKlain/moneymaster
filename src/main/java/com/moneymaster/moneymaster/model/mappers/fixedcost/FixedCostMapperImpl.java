@@ -13,7 +13,7 @@ public class FixedCostMapperImpl implements FixedCostMapper {
                 fixedCostDto.fixedCostId(),
                 fixedCostDto.amount(),
                 fixedCostDto.description(),
-                fixedCostDto.budgetCategory()
+                null
         );
     }
 
@@ -22,8 +22,7 @@ public class FixedCostMapperImpl implements FixedCostMapper {
         return new FixedCostDto(
                 fixedCost.getFixedCostId(),
                 fixedCost.getAmount(),
-                fixedCost.getDescription(),
-                fixedCost.getBudgetCategory()
+                fixedCost.getDescription()
         );
     }
 }
