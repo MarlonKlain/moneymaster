@@ -53,6 +53,28 @@ public class FixedCostServiceImpl implements FixedCostService{
         if(budgetCategoryId == null || fixedCostID == null){
             throw new IllegalArgumentException("A Budget Category ID or A Fixed Cost ID must be provided.");
         }
+
+        fixedCostRepository.findById(fixedCostID).orElseThrow(() -> new IllegalArgumentException("Fixed cost not found."));
+
         fixedCostRepository.deleteByBudgetCategory_BudgetCategoryIdAndFixedCostId(budgetCategoryId, fixedCostID);
+    }
+
+    @Override
+    public FixedCost updateFixedCost(UUID fixedCostId, FixedCost fixedCost) {
+        if(fixedCostId == null){
+            throw new IllegalArgumentException("A Fixed Cost ID must be provided.");
+        }
+
+        FixedCost fixedCostToUpdate = fixedCostRepository.findById(fixedCostId).orElseThrow(() -> new IllegalArgumentException("Fixed Cost not found"));
+
+        if(fixedCost.getAmount() != null){
+            fixedCostToUpdate.setAmount(fixedCost.getAmount());
+        }
+
+        if(fixedCost.getDescription() != null){
+            fixedCostToUpdate.setDescription(fixedCost.getDescription());
+        }
+
+        return fixedCostRepository.save(fixedCostToUpdate);
     }
 }

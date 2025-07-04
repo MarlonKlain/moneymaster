@@ -9,4 +9,5 @@ public interface BudgetCategoryService {
     BudgetCategory createBudgetCategory(UUID budgetId, BudgetCategory budgetCategory);
     List<BudgetCategory> getBudgetCategories(UUID budgetId);
     void deleteBudgetCategory(UUID budgetId, UUID budgetCategoryId);
+    BudgetCategory updateBudgetCategory(UUID budgetCategoryId, BudgetCategory budgetCategory);
 }

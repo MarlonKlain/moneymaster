@@ -1,10 +1,9 @@
 package com.moneymaster.moneymaster.controller;
 
-import com.moneymaster.moneymaster.model.dto.BudgetCategoryDto;
+import com.moneymaster.moneymaster.model.dto.budgetcategory.BudgetCategoryDto;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.mappers.budgetcategory.BudgetCategoryMapper;
 import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
-import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,4 +51,13 @@ public class BudgetCategoryController {
         budgetCategoryService.deleteBudgetCategory(budgetId, budgetCategoryId);
     }
 
+    @PatchMapping(path = "/{budgetCategoryId}")
+    public BudgetCategoryDto updateBudgetCategory(
+            @PathVariable("budgetCategoryId") UUID budgetCategoryId,
+            @RequestBody BudgetCategoryDto budgetCategoryDto
+    ){
+        BudgetCategory budgetCategoryUpdated = budgetCategoryService.updateBudgetCategory(budgetCategoryId, budgetCategoryMapper.fromDto(budgetCategoryDto));
+
+        return budgetCategoryMapper.toDto(budgetCategoryUpdated);
+    }
 }

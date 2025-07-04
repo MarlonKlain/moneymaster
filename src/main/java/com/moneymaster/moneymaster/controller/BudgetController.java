@@ -1,7 +1,7 @@
 package com.moneymaster.moneymaster.controller;
 
 
-import com.moneymaster.moneymaster.model.dto.BudgetDto;
+import com.moneymaster.moneymaster.model.dto.budget.BudgetDto;
 import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import com.moneymaster.moneymaster.service.budget.BudgetService;
@@ -45,5 +45,15 @@ public class BudgetController {
             @PathVariable("budgetId") UUID budgetId
     ){
         budgetService.deleteBudget(userID, budgetId);
+    }
+
+    @PatchMapping(path = "/{budgetId}")
+    public BudgetDto updateBudget(
+            @PathVariable("budgetId") UUID budgetId,
+            @RequestBody BudgetDto budgetDto
+            ){
+        Budget budgetUpdated = budgetService.updateBudget(budgetId, budgetMapper.fromDto(budgetDto));
+
+        return budgetMapper.toDto(budgetUpdated);
     }
 }

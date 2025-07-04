@@ -9,4 +9,5 @@ public interface UserService {
     User createUser(User user);
     void deleteUser (UUID userId);
     Optional<User> getUser(UUID userId);
+    User updateUsername(UUID userId, User user);
 }

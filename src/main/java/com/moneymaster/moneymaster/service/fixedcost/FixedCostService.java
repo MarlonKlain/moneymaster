@@ -9,5 +9,6 @@ public interface FixedCostService {
     FixedCost createFixedCost(UUID budgetCategoryId, FixedCost fixedCost);
     List<FixedCost> getFixedCosts(UUID budgetCategoryId);
     void deleteFixedCost(UUID budgetCategoryId, UUID fixedCostID);
+    FixedCost updateFixedCost (UUID fixedCostId, FixedCost fixedCost);
 
 }

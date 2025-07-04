@@ -1,13 +1,12 @@
 package com.moneymaster.moneymaster.controller;
 
-import com.moneymaster.moneymaster.model.dto.user.UserCreateDto;
+import com.moneymaster.moneymaster.model.dto.user.UserDto;
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
 import com.moneymaster.moneymaster.service.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,9 +23,9 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDto createUser(@RequestBody UserCreateDto userCreateDto){
+    public UserResponseDto createUser(@RequestBody UserDto userDto){
         User createUser = userService.createUser(
-                userMapper.fromDto(userCreateDto)
+                userMapper.fromDto(userDto)
         );
 
         return userMapper.toDto(createUser);
@@ -44,5 +43,14 @@ public class UserController {
         return userService.getUser(userId).map(userMapper::toDto);
     }
 
+    @PatchMapping(path = "/{userId}")
+    public UserResponseDto updateUsername(
+            @PathVariable("userId") UUID userId,
+            @RequestBody UserDto userDto
+    ){
+        User userUpdated = userService.updateUsername(userId, userMapper.fromDto(userDto));
+
+        return userMapper.toDto(userUpdated);
+    }
 
 }

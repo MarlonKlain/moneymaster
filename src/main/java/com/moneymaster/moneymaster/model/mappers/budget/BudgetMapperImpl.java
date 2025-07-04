@@ -1,6 +1,6 @@
 package com.moneymaster.moneymaster.model.mappers.budget;
 
-import com.moneymaster.moneymaster.model.dto.BudgetDto;
+import com.moneymaster.moneymaster.model.dto.budget.BudgetDto;
 import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.mappers.budgetcategory.BudgetCategoryMapper;
 import org.springframework.stereotype.Component;

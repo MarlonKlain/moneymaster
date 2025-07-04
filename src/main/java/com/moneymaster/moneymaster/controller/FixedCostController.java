@@ -1,6 +1,6 @@
 package com.moneymaster.moneymaster.controller;
 
-import com.moneymaster.moneymaster.model.dto.FixedCostDto;
+import com.moneymaster.moneymaster.model.dto.fixedcost.FixedCostDto;
 import com.moneymaster.moneymaster.model.entity.FixedCost;
 import com.moneymaster.moneymaster.model.mappers.fixedcost.FixedCostMapper;
 import com.moneymaster.moneymaster.service.fixedcost.FixedCostService;
@@ -44,7 +44,20 @@ public class FixedCostController {
     }
 
     @DeleteMapping(path = "/{fixedCostId}")
-    public void deleteFixedCost(UUID budgetCategoryId, UUID fixedCostId){
+    public void deleteFixedCost(
+            @PathVariable("budgetCategoryId") UUID budgetCategoryId,
+            @PathVariable("fixedCostId") UUID fixedCostId
+    ){
         fixedCostService.deleteFixedCost(budgetCategoryId, fixedCostId);
+    }
+
+    @PatchMapping(path = "/{fixedCostId}")
+    public FixedCostDto updateFixedCost(
+            @PathVariable("fixedCostId") UUID fixedCostId,
+            @RequestBody FixedCostDto fixedCostDto
+            ){
+        FixedCost fixedCostUpdated = fixedCostService.updateFixedCost(fixedCostId, fixedCostMapper.fromDto(fixedCostDto));
+
+        return fixedCostMapper.toDto(fixedCostUpdated);
     }
 }

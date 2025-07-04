@@ -8,6 +8,7 @@ import com.moneymaster.moneymaster.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,4 +61,18 @@ public class BudgetServiceImpl implements BudgetService{
     public void deleteBudget(UUID userId, UUID budgetId) {
         budgetRepository.deleteByUser_UserIdAndBudgetId(userId, budgetId);
     }
+
+    @Override
+    public Budget updateBudget(UUID budgetId, Budget budget) {
+        if(budgetId == null){
+            throw new IllegalArgumentException("A Budget ID must no be provided by the client!");
+        }
+
+        Budget budgetToUpdate = budgetRepository.findById(budgetId).orElseThrow(() -> new IllegalArgumentException("Budget not found"));
+
+        budgetToUpdate.setMonthlyIncome(budget.getMonthlyIncome());
+
+        return budgetRepository.save(budgetToUpdate);
+    }
+
 }

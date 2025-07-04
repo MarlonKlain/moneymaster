@@ -1,7 +1,6 @@
-package com.moneymaster.moneymaster.model.dto;
+package com.moneymaster.moneymaster.model.dto.budget;
 
-import com.moneymaster.moneymaster.model.entity.BudgetCategory;
-import com.moneymaster.moneymaster.model.entity.User;
+import com.moneymaster.moneymaster.model.dto.budgetcategory.BudgetCategoryDto;
 
 import java.math.BigDecimal;
 import java.util.List;

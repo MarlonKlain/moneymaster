@@ -1,6 +1,4 @@
-package com.moneymaster.moneymaster.model.dto;
-
-import com.moneymaster.moneymaster.model.entity.BudgetCategory;
+package com.moneymaster.moneymaster.model.dto.fixedcost;
 
 import java.math.BigDecimal;
 import java.util.UUID;

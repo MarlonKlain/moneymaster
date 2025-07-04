@@ -70,4 +70,27 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
         }
         budgetCategoryRepository.deleteByBudget_BudgetIdAndBudgetCategoryId(budgetId, budgetCategoryId);
     }
+
+    @Override
+    public BudgetCategory updateBudgetCategory(UUID budgetCategoryId, BudgetCategory budgetCategory) {
+        if(budgetCategoryId == null){
+            throw new IllegalArgumentException("The budget category ID must be provided!.");
+        }
+
+        BudgetCategory budgetCategoryToUpdate = budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(() -> new IllegalArgumentException("Budget Category not found."));
+
+        if(budgetCategory.getPercentage() != null){
+            budgetCategoryToUpdate.setPercentage(budgetCategory.getPercentage());
+        }
+
+        if(budgetCategory.getName() != null){
+            budgetCategoryToUpdate.setName(budgetCategory.getName());
+        }
+
+        if(budgetCategory.getImageUrl() != null ){
+            budgetCategoryToUpdate.setImageUrl(budgetCategory.getImageUrl());
+        }
+
+        return budgetCategoryRepository.save(budgetCategoryToUpdate);
+    }
 }

@@ -1,6 +1,6 @@
 package com.moneymaster.moneymaster.model.mappers.fixedcost;
 
-import com.moneymaster.moneymaster.model.dto.FixedCostDto;
+import com.moneymaster.moneymaster.model.dto.fixedcost.FixedCostDto;
 import com.moneymaster.moneymaster.model.entity.FixedCost;
 import org.springframework.stereotype.Component;
 
