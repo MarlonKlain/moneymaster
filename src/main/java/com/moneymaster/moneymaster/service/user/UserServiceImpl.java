@@ -1,11 +1,10 @@
 package com.moneymaster.moneymaster.service.user;
 
-import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,8 +54,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> getUser(UUID userId) {
-        return userRepository.findById(userId);
+    public User userLogin(String email, String password) {
+        User userFound = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        if(!Objects.equals(password, userFound.getPassword())){
+            throw new IllegalArgumentException("Password invalid");
+        } else {
+            return userFound;
+        }
     }
 
     @Override

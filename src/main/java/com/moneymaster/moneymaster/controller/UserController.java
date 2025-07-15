@@ -1,6 +1,7 @@
 package com.moneymaster.moneymaster.controller;
 
 import com.moneymaster.moneymaster.model.dto.user.UserDto;
+import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.UUID;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "api/user")
 public class UserController {
@@ -36,11 +38,14 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
-    @GetMapping(path = "/{userId}")
-    public Optional<UserResponseDto> getUser(
-            @PathVariable("userId") UUID userId
-    ){
-        return userService.getUser(userId).map(userMapper::toDto);
+    @PostMapping(path = "/login")
+    public UserResponseDto userLogin(
+            @RequestBody UserDto userCredentials
+            ){
+
+        User userFound = userService.userLogin(userCredentials.email(), userCredentials.password());
+
+        return userMapper.toDto(userFound);
     }
 
     @PatchMapping(path = "/{userId}")
