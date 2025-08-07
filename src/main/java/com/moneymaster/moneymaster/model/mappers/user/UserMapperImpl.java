@@ -29,13 +29,15 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserResponseDto toDto(User user) {
+    public UserResponseDto toDto(User user, String token) {
         return new UserResponseDto(
                 user.getUserId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getUsername(),
-                budgetMapper.toDto(user.getBudget())
+                user.getPassword(),
+                token
+//                budgetMapper.toDto(user.getBudget())
         );
     }
 }

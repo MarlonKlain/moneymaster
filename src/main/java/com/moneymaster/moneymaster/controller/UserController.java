@@ -1,17 +1,16 @@
 package com.moneymaster.moneymaster.controller;
 
 import com.moneymaster.moneymaster.model.dto.user.UserDto;
-import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
 import com.moneymaster.moneymaster.service.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "api/user")
 public class UserController {
@@ -24,13 +23,13 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping
+    @PostMapping(path = "/register")
     public UserResponseDto createUser(@RequestBody UserDto userDto){
         User createUser = userService.createUser(
                 userMapper.fromDto(userDto)
         );
 
-        return userMapper.toDto(createUser);
+        return userMapper.toDto(createUser, null);
     }
 
     @DeleteMapping(path = "/{userId}")
@@ -43,9 +42,7 @@ public class UserController {
             @RequestBody UserDto userCredentials
             ){
 
-        User userFound = userService.userLogin(userCredentials.email(), userCredentials.password());
-
-        return userMapper.toDto(userFound);
+        return userService.userLogin(userMapper.fromDto(userCredentials));
     }
 
     @PatchMapping(path = "/{userId}")
@@ -55,7 +52,14 @@ public class UserController {
     ){
         User userUpdated = userService.updateUsername(userId, userMapper.fromDto(userDto));
 
-        return userMapper.toDto(userUpdated);
+        return userMapper.toDto(userUpdated, null);
+    }
+
+    @GetMapping(path = "/users")
+    public List<UserResponseDto> getUsers(){
+        List<User> userList = userService.getUsers();
+        List<UserResponseDto> userResponseDtos = userList.stream().map(user -> userMapper.toDto(user, null)).toList();
+        return userResponseDtos;
     }
 
 }

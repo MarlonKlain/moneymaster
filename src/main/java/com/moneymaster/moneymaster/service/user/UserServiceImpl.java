@@ -1,10 +1,17 @@
 package com.moneymaster.moneymaster.service.user;
 
+import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
+import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
 import com.moneymaster.moneymaster.repository.UserRepository;
+import com.moneymaster.moneymaster.service.jwt.JWTService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,9 +19,17 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository){
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JWTService jwtService, UserMapper userMapper){
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
+        this.userMapper = userMapper;
+        this.authenticationManager = authenticationManager;
     }
 
     //todo
@@ -31,17 +46,10 @@ public class UserServiceImpl implements UserService{
             throw new IllegalArgumentException("The credentials provided were already taken!");
         }
 
-        return userRepository.save(
-                new User(
-                        null,
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getEmail(),
-                        user.getPassword(),
-                        user.getUsername(),
-                        null
-                )
-        );
+        user.setPassword(encoder.encode(user.getPassword()));
+
+        return userRepository.save(user);
+
     }
 
     @Override
@@ -54,13 +62,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User userLogin(String email, String password) {
-        User userFound = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found."));
-        if(!Objects.equals(password, userFound.getPassword())){
-            throw new IllegalArgumentException("Password invalid");
-        } else {
-            return userFound;
+    public UserResponseDto userLogin(User user) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+        if(authentication.isAuthenticated()){
+            String token = jwtService.generateToken(user.getUsername());
+            return userMapper.toDto(user, token);
         }
+        return null;
     }
 
     @Override
@@ -74,6 +83,11 @@ public class UserServiceImpl implements UserService{
         userToUpdate.setUsername(user.getUsername());
 
         return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
 }

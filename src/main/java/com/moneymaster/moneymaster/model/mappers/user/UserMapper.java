@@ -6,5 +6,5 @@ import com.moneymaster.moneymaster.model.entity.User;
 
 public interface UserMapper {
     User fromDto(UserDto userDto);
-    UserResponseDto toDto(User user);
+    UserResponseDto toDto(User user, String token);
 }

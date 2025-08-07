@@ -9,6 +9,8 @@ public record UserResponseDto(
         String firstName,
         String lastName,
         String username,
-        BudgetDto budgetDto
+        String password,
+        String token
+//        BudgetDto budgetDto
 ) {
 }
