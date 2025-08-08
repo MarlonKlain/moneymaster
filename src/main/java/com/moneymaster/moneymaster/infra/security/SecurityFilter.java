@@ -35,11 +35,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        // --- ADD THIS DEBUG LINE ---
-        System.out.println("INCOMING REQUEST: " + request.getMethod() + " " + request.getRequestURI());
-        // --- END OF DEBUG LINE ---
-
-
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
             username = jwtService.extractUsername(token);
