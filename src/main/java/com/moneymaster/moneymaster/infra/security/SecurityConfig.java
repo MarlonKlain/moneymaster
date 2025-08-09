@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
 //                Enables login form on the browser
 //                .formLogin(Customizer.withDefaults())
-////////                Enables rest API accesses (Postman/Insomnia)
+//                Enables rest API accesses (Postman/Insomnia)
 //                .httpBasic(Customizer.withDefaults())
 //                Defines the application as STATELESS, this means that every authentication will generate a new session id
                 .sessionManagement(session ->

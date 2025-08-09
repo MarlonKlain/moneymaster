@@ -8,7 +8,8 @@ public record UserDto(
         String lastName,
         String email,
         String password,
-        String username
+        String username,
+        boolean hasCompletedOnboarding
 
 ) {
 

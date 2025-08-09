@@ -11,6 +11,7 @@ public record UserResponseDto(
         String email,
         String username,
         String password,
+        boolean hasCompletedOnboarding,
         String token
 //        BudgetDto budgetDto
 ) {

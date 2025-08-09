@@ -24,6 +24,7 @@ public class UserMapperImpl implements UserMapper {
                 userDto.email(),
                 userDto.password(),
                 userDto.username(),
+                userDto.hasCompletedOnboarding(),
                 null
         );
     }
@@ -37,6 +38,7 @@ public class UserMapperImpl implements UserMapper {
                 user.getEmail(),
                 user.getUsername(),
                 user.getPassword(),
+                user.hasCompletedOnboarding(),
                 token
 //                budgetMapper.toDto(user.getBudget())
         );

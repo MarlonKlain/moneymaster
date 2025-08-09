@@ -34,6 +34,9 @@ public class User {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @Column(name = "onboarding", nullable = false)
+    private boolean hasCompletedOnboarding = false;
+
     @OneToOne(mappedBy = "user", cascade ={CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY, orphanRemoval = true)
     private Budget budget;
 
@@ -41,14 +44,23 @@ public class User {
 
     }
 
-    public User(UUID userId, String firstName, String lastName, String email, String password, String username, Budget budget) {
+    public User(UUID userId, String firstName, String lastName, String email, String password, String username, boolean hasCompletedOnboarding, Budget budget) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.username = username;
+        this.hasCompletedOnboarding = hasCompletedOnboarding;
         this.budget = budget;
+    }
+
+    public boolean hasCompletedOnboarding() {
+        return hasCompletedOnboarding;
+    }
+
+    public void setHasCompletedOnboarding(boolean hasCompletedOnboarding) {
+        this.hasCompletedOnboarding = hasCompletedOnboarding;
     }
 
     public UUID getUserId() {
@@ -116,7 +128,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, email, password, username, budget);
+        return Objects.hash(userId, firstName, lastName, email, password, username, hasCompletedOnboarding, budget);
     }
 
     @Override
@@ -128,6 +140,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", username='" + username + '\'' +
+                ", hasCompletedOnboarding='" + hasCompletedOnboarding + '\'' +
                 ", budget=" + budget +
                 '}';
     }
