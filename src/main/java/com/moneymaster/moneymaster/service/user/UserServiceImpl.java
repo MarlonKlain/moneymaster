@@ -1,5 +1,6 @@
 package com.moneymaster.moneymaster.service.user;
 
+import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
@@ -64,10 +65,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponseDto userLogin(User user) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
+        User userFound = userRepository.findUserByUsername(user.getUsername());
         if(authentication.isAuthenticated()){
             String token = jwtService.generateToken(user.getUsername());
-            return userMapper.toDto(user, token);
+            return userMapper.toDto(userFound, token);
         }
         return null;
     }
@@ -88,6 +89,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public void completeOnboarding(UUID userId) {
+        User userToUpdate = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userToUpdate.setHasCompletedOnboarding(true);
+        userRepository.save(userToUpdate);
     }
 
 }

@@ -1,10 +1,12 @@
 package com.moneymaster.moneymaster.controller;
 
+import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.user.UserDto;
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
 import com.moneymaster.moneymaster.service.user.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,6 +62,15 @@ public class UserController {
         List<User> userList = userService.getUsers();
         List<UserResponseDto> userResponseDtos = userList.stream().map(user -> userMapper.toDto(user, null)).toList();
         return userResponseDtos;
+    }
+
+    @PutMapping(path = "/onboarding")
+    public void completeOnboarding(
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @RequestBody UserDto userDto
+
+    ){
+        userService.completeOnboarding(currentUser.getId());
     }
 
 }

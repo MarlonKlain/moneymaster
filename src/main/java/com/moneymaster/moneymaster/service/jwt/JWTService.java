@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,12 +35,16 @@ public class JWTService {
 
         Map<String, Object> claims = new HashMap<>();
 
+        Instant expirationTime = Instant.now().plus(Duration.ofHours(1));
+
+        Date expirationAt = Date.from(expirationTime);
+
         return Jwts.builder()
                 .claims()
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 10))
+                .expiration(expirationAt)
                 .and()
                 .signWith(getKey())
                 .compact();

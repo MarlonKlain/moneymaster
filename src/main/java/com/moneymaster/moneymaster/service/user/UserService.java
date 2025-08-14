@@ -12,4 +12,6 @@ public interface UserService {
     UserResponseDto userLogin(User user);
     User updateUsername(UUID userId, User user);
     List<User> getUsers();
+    void completeOnboarding(UUID userId);
+
 }
