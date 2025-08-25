@@ -84,7 +84,7 @@ public class Budget {
 
     @Override
     public String toString() {
-        return "Budget{" +
+            return "Budget{" +
                 "budgetId=" + budgetId +
                 ", user=" + user +
                 ", monthlyIncome=" + monthlyIncome +

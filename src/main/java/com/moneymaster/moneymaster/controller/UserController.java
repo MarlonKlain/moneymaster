@@ -64,10 +64,9 @@ public class UserController {
         return userResponseDtos;
     }
 
-    @PutMapping(path = "/onboarding")
+    @PatchMapping(path = "/onboarding")
     public void completeOnboarding(
-            @AuthenticationPrincipal UserPrincipal currentUser,
-            @RequestBody UserDto userDto
+            @AuthenticationPrincipal UserPrincipal currentUser
 
     ){
         userService.completeOnboarding(currentUser.getId());

@@ -12,7 +12,7 @@ public record UserResponseDto(
         String username,
         String password,
         boolean hasCompletedOnboarding,
-        String token
-//        BudgetDto budgetDto
+        String token,
+        BudgetDto budgetDto
 ) {
 }

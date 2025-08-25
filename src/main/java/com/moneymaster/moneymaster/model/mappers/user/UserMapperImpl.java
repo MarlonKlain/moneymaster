@@ -31,6 +31,8 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserResponseDto toDto(User user, String token) {
+
+        if(user.getBudget() != null) {
         return new UserResponseDto(
                 user.getUserId(),
                 user.getFirstName(),
@@ -39,8 +41,22 @@ public class UserMapperImpl implements UserMapper {
                 user.getUsername(),
                 user.getPassword(),
                 user.hasCompletedOnboarding(),
-                token
-//                budgetMapper.toDto(user.getBudget())
+                token,
+                budgetMapper.toDto(user.getBudget())
         );
+
+        } else {
+            return new UserResponseDto(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.hasCompletedOnboarding(),
+                    token,
+                    null
+            );
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.moneymaster.moneymaster.service.user;
 
-import com.moneymaster.moneymaster.model.UserPrincipal;
+
 import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
