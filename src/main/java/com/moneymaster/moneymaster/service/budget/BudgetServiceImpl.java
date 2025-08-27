@@ -1,13 +1,16 @@
 package com.moneymaster.moneymaster.service.budget;
 
 import com.moneymaster.moneymaster.model.entity.Budget;
+import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import com.moneymaster.moneymaster.repository.BudgetRepository;
 import com.moneymaster.moneymaster.repository.UserRepository;
+import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,14 +20,17 @@ public class BudgetServiceImpl implements BudgetService{
 
     private final BudgetRepository budgetRepository;
     private final UserRepository userRepository;
+    private final BudgetCategoryService budgetCategoryService;
 
-    public BudgetServiceImpl(BudgetRepository budgetRepository, UserRepository userRepository){
+    public BudgetServiceImpl(BudgetRepository budgetRepository, UserRepository userRepository, BudgetCategoryService budgetCategoryService){
         this.budgetRepository = budgetRepository;
         this.userRepository = userRepository;
+        this.budgetCategoryService = budgetCategoryService;
     }
 
 
     @Override
+    @Transactional
     public Budget createBudget(UUID userId, Budget budget) {
         if(userId == null){
             throw new IllegalArgumentException("An User ID must be provided!");
@@ -40,8 +46,7 @@ public class BudgetServiceImpl implements BudgetService{
 
 
         User user = userRepository.getReferenceById(userId);
-
-        return budgetRepository.save(
+        Budget savedBudget = budgetRepository.save(
                 new Budget(
                         null,
                         user,
@@ -49,6 +54,13 @@ public class BudgetServiceImpl implements BudgetService{
                         null
                 )
         );
+
+        List<BudgetCategory> budgetCategoryList = budgetCategoryService.createDefaultBudgetCategories(savedBudget.getBudgetId());
+
+        savedBudget.setBudgetCategories(budgetCategoryList);
+
+        return savedBudget;
+
     }
 
     @Override

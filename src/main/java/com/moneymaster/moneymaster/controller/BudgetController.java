@@ -4,8 +4,10 @@ package com.moneymaster.moneymaster.controller;
 import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.budget.BudgetDto;
 import com.moneymaster.moneymaster.model.entity.Budget;
+import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import com.moneymaster.moneymaster.service.budget.BudgetService;
+import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,7 @@ public class BudgetController {
     private final BudgetService budgetService;
     private final BudgetMapper budgetMapper;
 
-    public BudgetController(BudgetService budgetService, BudgetMapper budgetMapper) {
+    public BudgetController(BudgetService budgetService, BudgetMapper budgetMapper, BudgetCategoryService budgetCategoryService) {
         this.budgetService = budgetService;
         this.budgetMapper = budgetMapper;
     }
@@ -29,9 +31,8 @@ public class BudgetController {
             @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody BudgetDto budgetDto
     ){
-        System.out.println(budgetDto.monthlyIncome());
-        Budget createBudget = budgetService.createBudget(currentUser.getId(), budgetMapper.fromDto(budgetDto));
-        return budgetMapper.toDto(createBudget);
+        Budget createdBudget = budgetService.createBudget(currentUser.getId(), budgetMapper.fromDto(budgetDto));
+        return budgetMapper.toDto(createdBudget);
 
     }
 

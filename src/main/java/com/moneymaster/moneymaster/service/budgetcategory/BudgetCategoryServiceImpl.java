@@ -54,6 +54,25 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     }
 
     @Override
+    @Transactional
+    public List<BudgetCategory> createDefaultBudgetCategories(UUID budgetId) {
+        if(budgetId == null) {
+        throw new IllegalArgumentException("A Budget ID must be provided!");
+        }
+
+        Budget budget = budgetRepository.getReferenceById(budgetId);
+
+
+        List<BudgetCategory> defaultBudgetCategories = List.of(
+                new BudgetCategory(null, budget, 0.5, "Needs", null, null),
+                new BudgetCategory(null, budget, 0.3, "Wants", null, null),
+                new BudgetCategory(null, budget, 0.2, "Savings", null, null)
+        );
+
+        return budgetCategoryRepository.saveAll(defaultBudgetCategories);
+    }
+
+    @Override
     public List<BudgetCategory> getBudgetCategories(UUID budgetId) {
         if(budgetId == null){
             throw new IllegalArgumentException("A Budget ID must be provided!");

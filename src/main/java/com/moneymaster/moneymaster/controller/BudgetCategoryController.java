@@ -1,16 +1,18 @@
 package com.moneymaster.moneymaster.controller;
 
+import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.budgetcategory.BudgetCategoryDto;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.mappers.budgetcategory.BudgetCategoryMapper;
 import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/user/{userId}/budget/{budgetId}/budget-category")
+@RequestMapping(path = "api/user/budget/budget-category")
 public class BudgetCategoryController {
 
     private final BudgetCategoryService budgetCategoryService;
@@ -35,9 +37,9 @@ public class BudgetCategoryController {
 
     @GetMapping
     public List<BudgetCategoryDto> getBudgetCategory(
-            @PathVariable("budgetId") UUID budgetId
-    ){
-        List<BudgetCategory> budgetCategories = budgetCategoryService.getBudgetCategories(budgetId);
+            @AuthenticationPrincipal UserPrincipal currentUser
+            ){
+        List<BudgetCategory> budgetCategories = budgetCategoryService.getBudgetCategories(currentUser.getBudgetId());
 
         return budgetCategories.stream().map(budgetCategoryMapper::toDto).toList();
 

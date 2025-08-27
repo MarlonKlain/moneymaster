@@ -35,12 +35,12 @@ public class BudgetCategory {
 
     }
 
-    public BudgetCategory(UUID budgetCategoryId, Budget budget, Double percentage, String name, String url, List<FixedCost> fixedCosts) {
+    public BudgetCategory(UUID budgetCategoryId, Budget budget, Double percentage, String name, String imageUrl, List<FixedCost> fixedCosts) {
         this.budgetCategoryId = budgetCategoryId;
         this.budget = budget;
         this.percentage = percentage;
         this.name = name;
-        this.imageUrl = url;
+        this.imageUrl = imageUrl;
         this.fixedCosts = fixedCosts;
     }
 
