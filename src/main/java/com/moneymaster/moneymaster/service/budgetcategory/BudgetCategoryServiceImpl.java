@@ -2,8 +2,10 @@ package com.moneymaster.moneymaster.service.budgetcategory;
 
 import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
+import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.repository.BudgetCategoryRepository;
 import com.moneymaster.moneymaster.repository.BudgetRepository;
+import com.moneymaster.moneymaster.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,13 @@ import java.util.UUID;
 public class BudgetCategoryServiceImpl implements BudgetCategoryService{
 
     private final BudgetCategoryRepository budgetCategoryRepository;
-    private  final BudgetRepository budgetRepository;
+    private final BudgetRepository budgetRepository;
+    private final UserRepository userRepository;
 
-    public BudgetCategoryServiceImpl(BudgetCategoryRepository budgetCategoryRepository, BudgetRepository budgetRepository){
+    public BudgetCategoryServiceImpl(BudgetCategoryRepository budgetCategoryRepository, BudgetRepository budgetRepository, UserRepository userRepository){
         this.budgetCategoryRepository = budgetCategoryRepository;
         this.budgetRepository = budgetRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -83,11 +87,11 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
 
     @Override
     @Transactional
-    public void deleteBudgetCategory(UUID budgetId, UUID budgetCategoryId) {
-        if(budgetId == null || budgetCategoryId == null){
-            throw new IllegalArgumentException("A Budget ID or A Budget Category ID must be provided!");
+    public void deleteBudgetCategory (BudgetCategory budgetCategory) {
+        if(budgetCategory == null){
+            throw new IllegalArgumentException("A Budget Category ID must be provided!");
         }
-        budgetCategoryRepository.deleteByBudget_BudgetIdAndBudgetCategoryId(budgetId, budgetCategoryId);
+        budgetCategoryRepository.deleteById(budgetCategory.getBudgetCategoryId());
     }
 
     @Override
@@ -111,5 +115,20 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
         }
 
         return budgetCategoryRepository.save(budgetCategoryToUpdate);
+    }
+
+    @Override
+    public List<BudgetCategory> updateBudgetCategoriesList(UUID userId, List<BudgetCategory> budgetCategoryList) {
+
+        if(budgetCategoryList.isEmpty()){
+            throw new IllegalArgumentException("At least one budget category most be provided!");
+        }
+
+        User currentUser = userRepository.getReferenceById(userId);
+        budgetCategoryList.forEach(budgetCategory -> {
+                    budgetCategory.setBudget(currentUser.getBudget());
+                }
+        );
+        return budgetCategoryRepository.saveAll(budgetCategoryList);
     }
 }

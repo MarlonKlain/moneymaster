@@ -45,12 +45,11 @@ public class BudgetCategoryController {
 
     }
 
-    @DeleteMapping(path = "/{budgetCategoryId}")
+    @PostMapping(path = "/delete")
     public void deleteBudgetList(
-        @PathVariable("budgetId") UUID budgetId,
-        @PathVariable("budgetCategoryId") UUID budgetCategoryId
+        @RequestBody() BudgetCategoryDto budgetCategoryDto
     ){
-        budgetCategoryService.deleteBudgetCategory(budgetId, budgetCategoryId);
+        budgetCategoryService.deleteBudgetCategory(budgetCategoryMapper.fromDto(budgetCategoryDto));
     }
 
     @PatchMapping(path = "/{budgetCategoryId}")
@@ -61,5 +60,16 @@ public class BudgetCategoryController {
         BudgetCategory budgetCategoryUpdated = budgetCategoryService.updateBudgetCategory(budgetCategoryId, budgetCategoryMapper.fromDto(budgetCategoryDto));
 
         return budgetCategoryMapper.toDto(budgetCategoryUpdated);
+    }
+
+    @PostMapping(path = "/update")
+    public void updateBudgetCategories(
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @RequestBody List<BudgetCategoryDto> budgetCategoryDto
+    ) {
+
+        List<BudgetCategory> budgetCategoryList = budgetCategoryDto.stream().map(budgetCategoryMapper::fromDto).toList();
+
+        budgetCategoryService.updateBudgetCategoriesList(currentUser.getId(), budgetCategoryList);
     }
 }
