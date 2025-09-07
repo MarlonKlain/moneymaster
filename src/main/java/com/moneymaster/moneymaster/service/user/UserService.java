@@ -13,5 +13,6 @@ public interface UserService {
     User updateUsername(UUID userId, User user);
     List<User> getUsers();
     void completeOnboarding(UUID userId);
+    User getUser(UUID userId);
 
 }

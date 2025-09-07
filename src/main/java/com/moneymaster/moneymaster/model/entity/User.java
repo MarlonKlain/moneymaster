@@ -37,6 +37,15 @@ public class User {
     @Column(name = "onboarding", nullable = false)
     private boolean hasCompletedOnboarding = false;
 
+    @Column(name = "hasSetMonthlyIncome", nullable = false)
+    private boolean hasSetMonthlyIncome = false;
+
+    @Column(name = "hasSetBudgetCategories", nullable = false)
+    private boolean hasSetBudgetCategories = false;
+
+    @Column(name = "hasSetFixedCosts", nullable = false)
+    private boolean hasSetFixedCosts = false;
+
     @OneToOne(mappedBy = "user", cascade ={CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY, orphanRemoval = true)
     private Budget budget;
 
@@ -44,7 +53,7 @@ public class User {
 
     }
 
-    public User(UUID userId, String firstName, String lastName, String email, String password, String username, boolean hasCompletedOnboarding, Budget budget) {
+    public User(UUID userId, String firstName, String lastName, String email, String password, String username, boolean hasCompletedOnboarding, boolean hasSetMonthlyIncome, boolean hasSetBudgetCategories, boolean hasSetFixedCosts, Budget budget) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,7 +61,34 @@ public class User {
         this.password = password;
         this.username = username;
         this.hasCompletedOnboarding = hasCompletedOnboarding;
+        this.hasSetMonthlyIncome = hasSetMonthlyIncome;
+        this.hasSetBudgetCategories = hasSetBudgetCategories;
+        this.hasSetFixedCosts = hasSetFixedCosts;
         this.budget = budget;
+    }
+
+    public boolean isHasSetMonthlyIncome() {
+        return hasSetMonthlyIncome;
+    }
+
+    public void setHasSetMonthlyIncome(boolean hasSetMonthlyIncome) {
+        this.hasSetMonthlyIncome = hasSetMonthlyIncome;
+    }
+
+    public boolean isHasSetBudgetCategories() {
+        return hasSetBudgetCategories;
+    }
+
+    public void setHasSetBudgetCategories(boolean hasSetBudgetCategories) {
+        this.hasSetBudgetCategories = hasSetBudgetCategories;
+    }
+
+    public boolean isHasSetFixedCosts() {
+        return hasSetFixedCosts;
+    }
+
+    public void setHasSetFixedCosts(boolean hasSetFixedCosts) {
+        this.hasSetFixedCosts = hasSetFixedCosts;
     }
 
     public boolean hasCompletedOnboarding() {
@@ -123,24 +159,27 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(budget, user.budget);
+        return hasCompletedOnboarding == user.hasCompletedOnboarding && hasSetMonthlyIncome == user.hasSetMonthlyIncome && hasSetBudgetCategories == user.hasSetBudgetCategories && hasSetFixedCosts == user.hasSetFixedCosts && Objects.equals(userId, user.userId) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(budget, user.budget);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, email, password, username, hasCompletedOnboarding, budget);
+        return Objects.hash(userId, firstName, lastName, email, password, username, hasCompletedOnboarding, hasSetMonthlyIncome, hasSetBudgetCategories, hasSetFixedCosts, budget);
     }
 
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "User{" +
                 "userId=" + userId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", username='" + username + '\'' +
-                ", hasCompletedOnboarding='" + hasCompletedOnboarding + '\'' +
+                ", hasCompletedOnboarding=" + hasCompletedOnboarding +
+                ", hasSetMonthlyIncome=" + hasSetMonthlyIncome +
+                ", hasSetBudgetCategories=" + hasSetBudgetCategories +
+                ", hasSetFixedCosts=" + hasSetFixedCosts +
                 ", budget=" + budget +
                 '}';
     }

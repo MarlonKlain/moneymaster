@@ -86,7 +86,6 @@ public class Budget {
     public String toString() {
             return "Budget{" +
                 "budgetId=" + budgetId +
-                ", user=" + user +
                 ", monthlyIncome=" + monthlyIncome +
                 ", budgetCategories=" + budgetCategories +
                 '}';

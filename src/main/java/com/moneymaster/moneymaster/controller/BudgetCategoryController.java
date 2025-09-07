@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/user/budget/budget-category")
+@RequestMapping(path = "api")
 public class BudgetCategoryController {
 
     private final BudgetCategoryService budgetCategoryService;
@@ -35,7 +35,7 @@ public class BudgetCategoryController {
 
     }
 
-    @GetMapping
+    @GetMapping(path = "/budget-category")
     public List<BudgetCategoryDto> getBudgetCategory(
             @AuthenticationPrincipal UserPrincipal currentUser
             ){
@@ -45,7 +45,7 @@ public class BudgetCategoryController {
 
     }
 
-    @PostMapping(path = "/delete")
+    @PostMapping(path = "/budget-category/delete")
     public void deleteBudgetList(
         @RequestBody() BudgetCategoryDto budgetCategoryDto
     ){
@@ -62,7 +62,7 @@ public class BudgetCategoryController {
         return budgetCategoryMapper.toDto(budgetCategoryUpdated);
     }
 
-    @PostMapping(path = "/update")
+    @PostMapping(path = "/budget-category/update")
     public void updateBudgetCategories(
             @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody List<BudgetCategoryDto> budgetCategoryDto

@@ -40,10 +40,9 @@ public class BudgetServiceImpl implements BudgetService{
             throw new IllegalArgumentException("A Budget ID must no be provided by the client!");
         }
 
-        if(budget.getMonthlyIncome() == null){
+        if(budget.getMonthlyIncome() == null) {
             throw new IllegalArgumentException("The monthly income must be provided!");
         }
-
 
         User user = userRepository.getReferenceById(userId);
         Budget savedBudget = budgetRepository.save(
@@ -54,6 +53,10 @@ public class BudgetServiceImpl implements BudgetService{
                         null
                 )
         );
+
+        user.setHasSetMonthlyIncome(true);
+
+        userRepository.save(user);
 
         List<BudgetCategory> budgetCategoryList = budgetCategoryService.createDefaultBudgetCategories(savedBudget.getBudgetId());
 

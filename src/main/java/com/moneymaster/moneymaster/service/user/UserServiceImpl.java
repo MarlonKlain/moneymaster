@@ -98,4 +98,13 @@ public class UserServiceImpl implements UserService{
         userRepository.save(userToUpdate);
     }
 
+    @Override
+    public User getUser(UUID userId) {
+        if(userId == null){
+            throw new IllegalArgumentException("A User ID must no be provided by the user!");
+        }
+
+        return userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("User not found"));
+    }
+
 }

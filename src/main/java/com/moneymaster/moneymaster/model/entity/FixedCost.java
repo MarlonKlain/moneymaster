@@ -85,7 +85,6 @@ public class FixedCost {
                 "fixedCostId=" + fixedCostId +
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
-                ", budgetCategory=" + budgetCategory +
                 '}';
     }
 }

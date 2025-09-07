@@ -108,7 +108,6 @@ public class BudgetCategory {
     public String toString() {
         return "BudgetCategory{" +
                 "budgetCategoryId=" + budgetCategoryId +
-                ", budget=" + budget +
                 ", percentage=" + percentage +
                 ", name='" + name + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +

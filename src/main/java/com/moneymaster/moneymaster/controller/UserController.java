@@ -14,7 +14,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "api")
 public class UserController {
 
     private final UserService userService;
@@ -60,9 +60,21 @@ public class UserController {
     @GetMapping(path = "/users")
     public List<UserResponseDto> getUsers(){
         List<User> userList = userService.getUsers();
-        List<UserResponseDto> userResponseDtos = userList.stream().map(user -> userMapper.toDto(user, null)).toList();
-        return userResponseDtos;
+        return userList.stream().map(user -> userMapper.toDto(user, null)).toList();
     }
+
+    @GetMapping(path = "/user")
+    public UserResponseDto getUser(
+            @AuthenticationPrincipal UserPrincipal currentUser
+    ){
+
+        User user = userService.getUser(currentUser.getId());
+        System.out.println("user = " + user);
+        UserResponseDto userDto = userMapper.toDto(user, null);
+        System.out.println("userDto = " + userDto);
+        return userDto;
+    }
+
 
     @PatchMapping(path = "/onboarding")
     public void completeOnboarding(

@@ -12,7 +12,10 @@ public record UserDto(
         String password,
         String username,
         String token,
-        boolean hasCompletedOnboarding
+        boolean hasCompletedOnboarding,
+        boolean hasSetMonthlyIncome,
+        boolean hasSetBudgetCategories,
+        boolean hasSetFixedCosts
 
 ) {
 

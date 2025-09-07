@@ -88,10 +88,9 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     @Override
     @Transactional
     public void deleteBudgetCategory (BudgetCategory budgetCategory) {
-        if(budgetCategory == null){
-            throw new IllegalArgumentException("A Budget Category ID must be provided!");
-        }
+        if(budgetCategory != null){
         budgetCategoryRepository.deleteById(budgetCategory.getBudgetCategoryId());
+        }
     }
 
     @Override
@@ -118,17 +117,21 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     }
 
     @Override
+    @Transactional
     public List<BudgetCategory> updateBudgetCategoriesList(UUID userId, List<BudgetCategory> budgetCategoryList) {
 
         if(budgetCategoryList.isEmpty()){
             throw new IllegalArgumentException("At least one budget category most be provided!");
         }
 
-        User currentUser = userRepository.getReferenceById(userId);
+        User user = userRepository.getReferenceById(userId);
         budgetCategoryList.forEach(budgetCategory -> {
-                    budgetCategory.setBudget(currentUser.getBudget());
+                    budgetCategory.setBudget(user.getBudget());
                 }
         );
+
+        user.setHasSetBudgetCategories(true);
+        userRepository.save(user);
         return budgetCategoryRepository.saveAll(budgetCategoryList);
     }
 }

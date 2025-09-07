@@ -25,6 +25,9 @@ public class UserMapperImpl implements UserMapper {
                 userDto.password(),
                 userDto.username(),
                 userDto.hasCompletedOnboarding(),
+                userDto.hasSetFixedCosts(),
+                userDto.hasSetBudgetCategories(),
+                userDto.hasSetMonthlyIncome(),
                 null
         );
     }
@@ -41,8 +44,12 @@ public class UserMapperImpl implements UserMapper {
                 user.getUsername(),
                 user.getPassword(),
                 user.hasCompletedOnboarding(),
+                user.isHasSetMonthlyIncome(),
+                user.isHasSetBudgetCategories(),
+                user.isHasSetFixedCosts(),
                 token,
                 budgetMapper.toDto(user.getBudget())
+
         );
 
         } else {
@@ -54,8 +61,12 @@ public class UserMapperImpl implements UserMapper {
                     user.getUsername(),
                     user.getPassword(),
                     user.hasCompletedOnboarding(),
+                    user.isHasSetMonthlyIncome(),
+                    user.isHasSetBudgetCategories(),
+                    user.isHasSetFixedCosts(),
                     token,
                     null
+
             );
         }
     }

@@ -12,7 +12,12 @@ public record UserResponseDto(
         String username,
         String password,
         boolean hasCompletedOnboarding,
+        boolean hasSetMonthlyIncome,
+        boolean hasSetBudgetCategories,
+        boolean hasSetFixedCosts,
         String token,
         BudgetDto budgetDto
+
+
 ) {
 }

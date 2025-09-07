@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/user/budget")
+@RequestMapping(path = "api")
 public class BudgetController {
 
     private final BudgetService budgetService;
@@ -26,7 +26,7 @@ public class BudgetController {
         this.budgetMapper = budgetMapper;
     }
 
-    @PostMapping
+    @PostMapping(path = "/budget")
     public BudgetDto createBudget(
             @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody BudgetDto budgetDto
@@ -36,7 +36,7 @@ public class BudgetController {
 
     }
 
-    @GetMapping
+    @GetMapping(path = "/budget")
     public Optional<BudgetDto> getBudget(
             @AuthenticationPrincipal UserPrincipal currentuser
     ){
