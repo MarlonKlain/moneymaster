@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface BudgetService {
     Budget createBudget(UUID userId, Budget budget);
-    Optional<Budget> getBudget(UUID userId);
+    Optional<Budget> getBudgetByUser(UUID userId);
     void deleteBudget(UUID userId, UUID budgetId);
     Budget updateBudget(UUID budgetId, Budget budget);
 }

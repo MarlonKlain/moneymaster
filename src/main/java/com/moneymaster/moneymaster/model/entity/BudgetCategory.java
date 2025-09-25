@@ -2,6 +2,8 @@ package com.moneymaster.moneymaster.model.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,8 +21,8 @@ public class BudgetCategory {
     @JoinColumn(name = "budget_id")
     private Budget budget;
 
-    @Column(name = "percentage", nullable = false)
-    private Double percentage;
+    @Column(name = "percentage", nullable = false, precision = 5, scale = 4)
+    private BigDecimal percentage;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -28,14 +30,14 @@ public class BudgetCategory {
     @Column(name= "imageUrl")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "budgetCategory", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<FixedCost> fixedCosts;
+    @OneToMany(mappedBy = "budgetCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<FixedCost> fixedCosts = new ArrayList<>();
 
     public BudgetCategory(){
 
     }
 
-    public BudgetCategory(UUID budgetCategoryId, Budget budget, Double percentage, String name, String imageUrl, List<FixedCost> fixedCosts) {
+    public BudgetCategory(UUID budgetCategoryId, Budget budget, BigDecimal percentage, String name, String imageUrl, List<FixedCost> fixedCosts) {
         this.budgetCategoryId = budgetCategoryId;
         this.budget = budget;
         this.percentage = percentage;
@@ -60,11 +62,11 @@ public class BudgetCategory {
         this.budget = budget;
     }
 
-    public Double getPercentage() {
+    public BigDecimal getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Double percentage) {
+    public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
 

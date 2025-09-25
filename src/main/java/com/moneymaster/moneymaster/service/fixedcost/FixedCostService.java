@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FixedCostService {
-    FixedCost createFixedCost(UUID budgetCategoryId, FixedCost fixedCost);
+    List<FixedCost> createFixedCost(UUID currentUserId, List<FixedCost> fixedCostDtoList);
     List<FixedCost> getFixedCosts(UUID budgetCategoryId);
-    void deleteFixedCost(UUID budgetCategoryId, UUID fixedCostID);
+    void deleteFixedCost(UUID fixedCostID);
     FixedCost updateFixedCost (UUID fixedCostId, FixedCost fixedCost);
 
 }

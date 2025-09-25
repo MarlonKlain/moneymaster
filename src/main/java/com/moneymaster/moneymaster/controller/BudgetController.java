@@ -4,7 +4,6 @@ package com.moneymaster.moneymaster.controller;
 import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.budget.BudgetDto;
 import com.moneymaster.moneymaster.model.entity.Budget;
-import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import com.moneymaster.moneymaster.service.budget.BudgetService;
 import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
@@ -40,7 +39,7 @@ public class BudgetController {
     public Optional<BudgetDto> getBudget(
             @AuthenticationPrincipal UserPrincipal currentuser
     ){
-        return budgetService.getBudget(currentuser.getId()).map(budgetMapper::toDto);
+        return budgetService.getBudgetByUser(currentuser.getId()).map(budgetMapper::toDto);
     }
 
     @DeleteMapping(path = "/{budgetId}")

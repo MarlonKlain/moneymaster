@@ -22,7 +22,8 @@ public class FixedCostMapperImpl implements FixedCostMapper {
         return new FixedCostDto(
                 fixedCost.getFixedCostId(),
                 fixedCost.getAmount(),
-                fixedCost.getDescription()
+                fixedCost.getDescription(),
+                null
         );
     }
 }

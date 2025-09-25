@@ -67,7 +67,7 @@ public class BudgetServiceImpl implements BudgetService{
     }
 
     @Override
-    public Optional<Budget> getBudget(UUID userId) {
+    public Optional<Budget> getBudgetByUser(UUID userId) {
         return budgetRepository.findByUser_UserId(userId);
     }
 

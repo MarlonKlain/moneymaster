@@ -16,8 +16,6 @@ public record UserResponseDto(
         boolean hasSetBudgetCategories,
         boolean hasSetFixedCosts,
         String token,
-        BudgetDto budgetDto
-
-
+        BudgetDto budget
 ) {
 }

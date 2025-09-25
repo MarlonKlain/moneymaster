@@ -69,10 +69,8 @@ public class UserController {
     ){
 
         User user = userService.getUser(currentUser.getId());
-        System.out.println("user = " + user);
-        UserResponseDto userDto = userMapper.toDto(user, null);
-        System.out.println("userDto = " + userDto);
-        return userDto;
+
+        return userMapper.toDto(user, null);
     }
 
 

@@ -41,7 +41,7 @@ public class BudgetMapperImpl implements BudgetMapper {
                 Optional.ofNullable(budget.getBudgetCategories())
                         .map(budgetCategories -> budgetCategories
                                 .stream()
-                                .map(budgetCategoryMapper::toDto)
+                                .map(budgetCategory -> budgetCategoryMapper.toDto(budgetCategory, budget.getMonthlyIncome()))
                                 .toList())
                         .orElse(Collections.emptyList())
         );

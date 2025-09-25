@@ -1,16 +1,18 @@
 package com.moneymaster.moneymaster.controller;
 
+import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.fixedcost.FixedCostDto;
 import com.moneymaster.moneymaster.model.entity.FixedCost;
 import com.moneymaster.moneymaster.model.mappers.fixedcost.FixedCostMapper;
 import com.moneymaster.moneymaster.service.fixedcost.FixedCostService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/user/{userId}/budget/{budgetId}/budget-category/{budgetCategoryId}/fixed-cost")
+@RequestMapping(path = "api")
 public class FixedCostController {
 
     private final FixedCostMapper fixedCostMapper;
@@ -22,14 +24,15 @@ public class FixedCostController {
     }
 
 
-    @PostMapping
-    public FixedCostDto createFixedCost(
-            @PathVariable("budgetCategoryId") UUID budgetCategoryID,
-            @RequestBody FixedCostDto fixedCostDto
+    @PostMapping(path = "/fixed-cost")
+    public List<FixedCostDto> createFixedCost(
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @RequestBody List<FixedCostDto> fixedCostDtoList
             ){
-        FixedCost createdFixedCost = fixedCostService.createFixedCost(budgetCategoryID, fixedCostMapper.fromDto(fixedCostDto));
 
-        return fixedCostMapper.toDto(createdFixedCost);
+        List<FixedCost> createdFixedCost = fixedCostService.createFixedCost(currentUser.getId(), fixedCostDtoList.stream().map(fixedCostMapper::fromDto).toList());
+
+        return createdFixedCost.stream().map(fixedCostMapper::toDto).toList();
     }
 
     @GetMapping
@@ -43,12 +46,11 @@ public class FixedCostController {
 
     }
 
-    @DeleteMapping(path = "/{fixedCostId}")
+    @PostMapping(path = "/fixed-cost/delete")
     public void deleteFixedCost(
-            @PathVariable("budgetCategoryId") UUID budgetCategoryId,
-            @PathVariable("fixedCostId") UUID fixedCostId
+            @RequestBody UUID fixedCostId
     ){
-        fixedCostService.deleteFixedCost(budgetCategoryId, fixedCostId);
+        fixedCostService.deleteFixedCost(fixedCostId);
     }
 
     @PatchMapping(path = "/{fixedCostId}")
