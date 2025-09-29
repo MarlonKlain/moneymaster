@@ -10,6 +10,7 @@ import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,9 +44,9 @@ public class BudgetCategoryController {
     public List<BudgetCategoryDto> getBudgetCategories(
             @AuthenticationPrincipal UserPrincipal currentUser
             ){
-        List<BudgetCategory> budgetCategories = budgetCategoryService.getBudgetCategories(currentUser.getBudgetId());
+        List<BudgetCategory> budgetCategories = budgetCategoryService.getBudgetCategories(currentUser);
 
-        return budgetCategories.stream().map(budgetCategory -> budgetCategoryMapper.toDto(budgetCategory, null)).toList();
+        return budgetCategories.stream().map(budgetCategory -> budgetCategoryMapper.toDto(budgetCategory, new BigDecimal("0"))).toList();
 
     }
 
@@ -54,7 +55,7 @@ public class BudgetCategoryController {
             @AuthenticationPrincipal UserPrincipal currentUser,
             @PathVariable("budgetCategoryId") UUID budgetCategoryId
     ){
-        Budget budget = budgetService.getBudgetByUser(currentUser.getId()).orElseThrow(()-> new IllegalArgumentException("Budget not found for this user."));
+        Budget budget = budgetService.getBudgetByUser(currentUser).orElseThrow(()-> new IllegalArgumentException("Budget not found for this user."));
         BudgetCategory budgetCategory = budgetCategoryService.getBudgetCategory(budgetCategoryId);
         return budgetCategoryMapper.toDto(budgetCategory, budget.getMonthlyIncome());
     }
@@ -74,7 +75,7 @@ public class BudgetCategoryController {
             @RequestBody BudgetCategoryDto budgetCategoryDto
     ){
 
-        Budget budget = budgetService.getBudgetByUser(currentUser.getId()).orElseThrow(()-> new IllegalArgumentException("Budget not found for this user."));
+        Budget budget = budgetService.getBudgetByUser(currentUser).orElseThrow(()-> new IllegalArgumentException("Budget not found for this user."));
         BudgetCategory budgetCategoryUpdated = budgetCategoryService.updateBudgetCategory(currentUser.getId(), budgetCategoryId, budgetCategoryMapper.fromDto(budgetCategoryDto));
         return budgetCategoryMapper.toDto(budgetCategoryUpdated, budget.getMonthlyIncome());
     }

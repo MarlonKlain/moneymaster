@@ -1,9 +1,9 @@
 package com.moneymaster.moneymaster.service.budget;
 
+import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.entity.User;
-import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import com.moneymaster.moneymaster.repository.BudgetRepository;
 import com.moneymaster.moneymaster.repository.UserRepository;
 import com.moneymaster.moneymaster.service.budgetcategory.BudgetCategoryService;
@@ -11,9 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class BudgetServiceImpl implements BudgetService{
@@ -31,8 +29,8 @@ public class BudgetServiceImpl implements BudgetService{
 
     @Override
     @Transactional
-    public Budget createBudget(UUID userId, Budget budget) {
-        if(userId == null){
+    public Budget createBudget(UserPrincipal currentUser, Budget budget) {
+        if(currentUser.getId() == null){
             throw new IllegalArgumentException("An User ID must be provided!");
         }
 
@@ -44,7 +42,7 @@ public class BudgetServiceImpl implements BudgetService{
             throw new IllegalArgumentException("The monthly income must be provided!");
         }
 
-        User user = userRepository.getReferenceById(userId);
+        User user = userRepository.getReferenceById(currentUser.getId());
         Budget savedBudget = budgetRepository.save(
                 new Budget(
                         null,
@@ -67,23 +65,23 @@ public class BudgetServiceImpl implements BudgetService{
     }
 
     @Override
-    public Optional<Budget> getBudgetByUser(UUID userId) {
-        return budgetRepository.findByUser_UserId(userId);
+    public Optional<Budget> getBudgetByUser(UserPrincipal currentUser) {
+        return budgetRepository.findByUser_UserId(currentUser.getId());
     }
 
     @Override
     @Transactional
-    public void deleteBudget(UUID userId, UUID budgetId) {
-        budgetRepository.deleteByUser_UserIdAndBudgetId(userId, budgetId);
+    public void deleteBudget(UserPrincipal currentUser) {
+        budgetRepository.deleteByUser_UserIdAndBudgetId(currentUser.getId(), currentUser.getBudgetId());
     }
 
     @Override
-    public Budget updateBudget(UUID budgetId, Budget budget) {
-        if(budgetId == null){
+    public Budget updateBudget(UserPrincipal currentUser, Budget budget) {
+        if(currentUser.getBudgetId() == null){
             throw new IllegalArgumentException("A Budget ID must no be provided by the client!");
         }
 
-        Budget budgetToUpdate = budgetRepository.findById(budgetId).orElseThrow(() -> new IllegalArgumentException("Budget not found"));
+        Budget budgetToUpdate = budgetRepository.findById(currentUser.getBudgetId()).orElseThrow(() -> new IllegalArgumentException("Budget not found"));
 
         budgetToUpdate.setMonthlyIncome(budget.getMonthlyIncome());
 

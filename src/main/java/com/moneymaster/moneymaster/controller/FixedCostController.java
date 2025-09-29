@@ -30,7 +30,7 @@ public class FixedCostController {
             @RequestBody List<FixedCostDto> fixedCostDtoList
             ){
 
-        List<FixedCost> createdFixedCost = fixedCostService.createFixedCost(currentUser.getId(), fixedCostDtoList.stream().map(fixedCostMapper::fromDto).toList());
+        List<FixedCost> createdFixedCost = fixedCostService.createFixedCost(currentUser.getId(), fixedCostDtoList);
 
         return createdFixedCost.stream().map(fixedCostMapper::toDto).toList();
     }
@@ -48,9 +48,9 @@ public class FixedCostController {
 
     @PostMapping(path = "/fixed-cost/delete")
     public void deleteFixedCost(
-            @RequestBody UUID fixedCostId
+            @RequestBody FixedCostDto fixedCostDto
     ){
-        fixedCostService.deleteFixedCost(fixedCostId);
+        fixedCostService.deleteFixedCost(fixedCostDto);
     }
 
     @PatchMapping(path = "/{fixedCostId}")

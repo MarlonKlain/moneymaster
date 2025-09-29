@@ -1,5 +1,6 @@
 package com.moneymaster.moneymaster.service.budgetcategory;
 
+import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.entity.FixedCost;
@@ -82,11 +83,11 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     }
 
     @Override
-    public List<BudgetCategory> getBudgetCategories(UUID budgetId) {
-        if(budgetId == null){
+    public List<BudgetCategory> getBudgetCategories(UserPrincipal currentUser) {
+        if(currentUser.getBudgetId() == null){
             throw new IllegalArgumentException("A Budget ID must be provided!");
         }
-        return budgetCategoryRepository.findByBudget_BudgetId(budgetId);
+        return budgetCategoryRepository.findByBudget_BudgetId(currentUser.getBudgetId());
 
     }
 
@@ -109,31 +110,32 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     //resolver essa gambiarra
     public BudgetCategory updateBudgetCategory(UUID userId, UUID budgetCategoryId, BudgetCategory budgetCategory) {
 
-        if(budgetCategoryId == null){
-            throw new IllegalArgumentException("The budget category ID must be provided!.");
-        }
-
-        BudgetCategory budgetCategoryToUpdate = budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(() -> new IllegalArgumentException("Budget Category not found."));
-
-        if(budgetCategory.getPercentage() != null){
-            budgetCategoryToUpdate.setPercentage(budgetCategory.getPercentage());
-        }
-
-        if(budgetCategory.getName() != null){
-            budgetCategoryToUpdate.setName(budgetCategory.getName());
-        }
-
-        if(budgetCategory.getImageUrl() != null ){
-            budgetCategoryToUpdate.setImageUrl(budgetCategory.getImageUrl());
-        }
-        List<FixedCost> fixedCostList = budgetCategory.getFixedCosts();
-        fixedCostList.forEach(fixedCost -> {
-            fixedCost.setBudgetCategory(budgetCategoryToUpdate);
-        });
-
-        fixedCostService.createFixedCost(userId, fixedCostList);
-
-        return budgetCategoryRepository.save(budgetCategoryToUpdate);
+//        if(budgetCategoryId == null){
+//            throw new IllegalArgumentException("The budget category ID must be provided!.");
+//        }
+//
+//        BudgetCategory budgetCategoryToUpdate = budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(() -> new IllegalArgumentException("Budget Category not found."));
+//
+//        if(budgetCategory.getPercentage() != null){
+//            budgetCategoryToUpdate.setPercentage(budgetCategory.getPercentage());
+//        }
+//
+//        if(budgetCategory.getName() != null){
+//            budgetCategoryToUpdate.setName(budgetCategory.getName());
+//        }
+//
+//        if(budgetCategory.getImageUrl() != null ){
+//            budgetCategoryToUpdate.setImageUrl(budgetCategory.getImageUrl());
+//        }
+//        List<FixedCost> fixedCostList = budgetCategory.getFixedCosts();
+//        fixedCostList.forEach(fixedCost -> {
+//            fixedCost.setBudgetCategory(budgetCategoryToUpdate);
+//        });
+//
+//        fixedCostService.createFixedCost(userId, fixedCostList);
+//
+//        return budgetCategoryRepository.save(budgetCategoryToUpdate);
+        return  new BudgetCategory();
     }
 
     @Override

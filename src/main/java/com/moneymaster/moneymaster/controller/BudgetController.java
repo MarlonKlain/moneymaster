@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api")
+@RequestMapping(path = "api/budget")
 public class BudgetController {
 
     private final BudgetService budgetService;
@@ -25,37 +25,36 @@ public class BudgetController {
         this.budgetMapper = budgetMapper;
     }
 
-    @PostMapping(path = "/budget")
+    @PostMapping
     public BudgetDto createBudget(
             @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody BudgetDto budgetDto
     ){
-        Budget createdBudget = budgetService.createBudget(currentUser.getId(), budgetMapper.fromDto(budgetDto));
+        Budget createdBudget = budgetService.createBudget(currentUser, budgetMapper.fromDto(budgetDto));
         return budgetMapper.toDto(createdBudget);
 
     }
 
-    @GetMapping(path = "/budget")
+    @GetMapping
     public Optional<BudgetDto> getBudget(
             @AuthenticationPrincipal UserPrincipal currentuser
     ){
-        return budgetService.getBudgetByUser(currentuser.getId()).map(budgetMapper::toDto);
+        return budgetService.getBudgetByUser(currentuser).map(budgetMapper::toDto);
     }
 
     @DeleteMapping(path = "/{budgetId}")
     public void deleteBudget(
-            @PathVariable("userId") UUID userID,
-            @PathVariable("budgetId") UUID budgetId
+            @AuthenticationPrincipal UserPrincipal currentUser
     ){
-        budgetService.deleteBudget(userID, budgetId);
+        budgetService.deleteBudget(currentUser);
     }
 
     @PatchMapping(path = "/{budgetId}")
     public BudgetDto updateBudget(
-            @PathVariable("budgetId") UUID budgetId,
+            @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody BudgetDto budgetDto
             ){
-        Budget budgetUpdated = budgetService.updateBudget(budgetId, budgetMapper.fromDto(budgetDto));
+        Budget budgetUpdated = budgetService.updateBudget(currentUser,budgetMapper.fromDto(budgetDto));
 
         return budgetMapper.toDto(budgetUpdated);
     }

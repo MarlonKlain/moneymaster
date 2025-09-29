@@ -1,18 +1,21 @@
 package com.moneymaster.moneymaster.service.user;
 
 
-import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
+import com.moneymaster.moneymaster.model.UserPrincipal;
+import com.moneymaster.moneymaster.model.dto.user.UserInformationDto;
+import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
+import com.moneymaster.moneymaster.model.dto.user.UserRegistrationDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
 import com.moneymaster.moneymaster.repository.UserRepository;
 import com.moneymaster.moneymaster.service.jwt.JWTService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,75 +36,64 @@ public class UserServiceImpl implements UserService{
         this.authenticationManager = authenticationManager;
     }
 
-    //todo
-    //@transactional
+    @Transactional
     @Override
-    public User createUser(User user) {
-        if(user.getUserId() != null){
+    public User registerUser(UserRegistrationDto userRegistrationDto) {
+
+        User userToRegister = userMapper.fromUserRegistrationDto(userRegistrationDto);
+        //checks if the frontend is not providing a id. For registration, it always should be null
+        if(userToRegister.getUserId() != null){
             throw new IllegalArgumentException("A User ID must no be provided by the client!.");
         }
 
-        Optional<User> userExists = userRepository.findByEmailOrUsername(user.getEmail(), user.getUsername());
-
+        //Look if the credentials provided by the user already exists
+        Optional<User> userExists = userRepository.findByEmailOrUsername(userToRegister.getEmail(), userToRegister.getUsername());
         if(userExists.isPresent()){
             throw new IllegalArgumentException("The credentials provided were already taken!");
         }
 
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setHasCompletedOnboarding(false);
-        return userRepository.save(user);
+        //encrypt the password
+        userToRegister.setPassword(encoder.encode(userToRegister.getPassword()));
+
+        //register the user in the database
+        return userRepository.save(userToRegister);
 
     }
 
     @Override
-    public void deleteUser(UUID userId) {
-        if(userId == null){
+    public void deleteUser(UserPrincipal currentUser) {
+        if(currentUser.getId() == null){
             throw new IllegalArgumentException("ID was not provided!.");
         } else {
-            userRepository.deleteById(userId);
+            userRepository.deleteById(currentUser.getId());
         }
     }
 
     @Override
-    public UserResponseDto userLogin(User user) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        User userFound = userRepository.findUserByUsername(user.getUsername());
-        if(authentication.isAuthenticated()){
-            String token = jwtService.generateToken(user.getUsername());
-            return userMapper.toDto(userFound, token);
+    public UserInformationDto loginUser(UserLoginDto userLoginDto) {
+        User userToLogin = userMapper.fromUserLoginDto(userLoginDto);
+        //todo Enables the login also by email
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userToLogin.getUsername(), userToLogin.getPassword()));
+        User userFound = userRepository.findUserByUsername(userToLogin.getUsername());
+        if(!authentication.isAuthenticated()){
+            throw new IllegalArgumentException("Authentication went wrong, please try again.");
         }
-        return null;
+            String token = jwtService.generateToken(userToLogin.getUsername());
+            return userMapper.createUserInformationDto(userFound, token);
     }
 
     @Override
-    public User updateUsername(UUID userId, User user) {
-        if (user.getUserId() != null) {
-            throw new IllegalArgumentException("A User ID must no be provided by the client!.");
-        }
-
-        User userToUpdate = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        userToUpdate.setUsername(user.getUsername());
-
+    public User updateUserOnboardingStatus(UserPrincipal currentUser) {
+        User userToUpdate = userRepository.findById(currentUser.getId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        userToUpdate.setHasCompletedOnboarding(true);
         return userRepository.save(userToUpdate);
     }
 
-    @Override
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public void completeOnboarding(UUID userId) {
-        User userToUpdate = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        userToUpdate.setHasCompletedOnboarding(true);
-        userRepository.save(userToUpdate);
-    }
 
     @Override
     public User getUser(UUID userId) {
         if(userId == null){
-            throw new IllegalArgumentException("A User ID must no be provided by the user!");
+            throw new IllegalArgumentException("A User ID must be provided by the user!");
         }
 
         return userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("User not found"));

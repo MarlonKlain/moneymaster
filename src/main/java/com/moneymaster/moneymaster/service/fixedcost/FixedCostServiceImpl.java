@@ -32,17 +32,18 @@ public class FixedCostServiceImpl implements FixedCostService{
 
     @Override
     @Transactional
-    public List<FixedCost> createFixedCost(UUID currentUserId, List<FixedCost> fixedCostList) {
+    public List<FixedCost> createFixedCost(UUID currentUserId, List<FixedCostDto> fixedCostDtoListDto) {
 
         List<FixedCost> fixedCosts = new ArrayList<>();
-
-        fixedCostList.forEach(fixedCost -> {
-
-            BudgetCategory budgetCategory = budgetCategoryRepository.getReferenceById(fixedCost.getBudgetCategory().getBudgetCategoryId());
-
-            fixedCost.setBudgetCategory(budgetCategory);
-
-            fixedCosts.add(fixedCost);
+        fixedCostDtoListDto.forEach(fixedCostDto -> {
+            BudgetCategory budgetCategory = budgetCategoryRepository.getReferenceById(fixedCostDto.budgetCategoryId());
+            FixedCost fixedCostToUpdate = new FixedCost(
+                    null,
+                    fixedCostDto.amount(),
+                    fixedCostDto.description(),
+                    budgetCategory
+            );
+            fixedCosts.add(fixedCostToUpdate);
         });
 
         User user = userRepository.findById(currentUserId).orElseThrow(() -> new IllegalArgumentException("User not found!"));
@@ -62,13 +63,13 @@ public class FixedCostServiceImpl implements FixedCostService{
 
     @Override
     @Transactional
-    public void deleteFixedCost(UUID fixedCostID) {
-        if(fixedCostID == null){
+    public void deleteFixedCost(FixedCostDto fixedCostDto) {
+        if(fixedCostDto == null){
             throw new IllegalArgumentException("A Budget Category ID or A Fixed Cost ID must be provided.");
         }
 
-        fixedCostRepository.findById(fixedCostID).orElseThrow(() -> new IllegalArgumentException("Fixed cost not found."));
-        fixedCostRepository.deleteById(fixedCostID);
+        fixedCostRepository.findById(fixedCostDto.fixedCostId()).orElseThrow(() -> new IllegalArgumentException("Fixed cost not found."));
+        fixedCostRepository.deleteById(fixedCostDto.fixedCostId());
 
     }
 

@@ -1,6 +1,8 @@
 package com.moneymaster.moneymaster.model.mappers.user;
-import com.moneymaster.moneymaster.model.dto.user.UserDto;
-import com.moneymaster.moneymaster.model.dto.user.UserResponseDto;
+import com.moneymaster.moneymaster.model.dto.user.UserInformationDto;
+import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
+import com.moneymaster.moneymaster.model.dto.user.UserOnboardingStatusDto;
+import com.moneymaster.moneymaster.model.dto.user.UserRegistrationDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import org.springframework.stereotype.Component;
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapperImpl implements UserMapper {
 
-    private  final BudgetMapper budgetMapper;
+    private final BudgetMapper budgetMapper;
 
     public UserMapperImpl(BudgetMapper budgetMapper) {
         this.budgetMapper = budgetMapper;
@@ -16,58 +18,57 @@ public class UserMapperImpl implements UserMapper {
 
 
     @Override
-    public User fromDto(UserDto userDto) {
+    public User fromUserLoginDto(UserLoginDto userLoginDto) {
         return new User(
                 null,
-                userDto.firstName(),
-                userDto.lastName(),
-                userDto.email(),
-                userDto.password(),
-                userDto.username(),
-                userDto.hasCompletedOnboarding(),
-                userDto.hasSetFixedCosts(),
-                userDto.hasSetBudgetCategories(),
-                userDto.hasSetMonthlyIncome(),
+                null,
+                null,
+                null,
+                userLoginDto.password(),
+                userLoginDto.username(),
+                false,
+                false,
+                false,
+                false,
                 null
         );
     }
 
     @Override
-    public UserResponseDto toDto(User user, String token) {
+    public User fromUserRegistrationDto(UserRegistrationDto userRegistrationDto) {
+        return new User(
+                null,
+                userRegistrationDto.firstName(),
+                userRegistrationDto.lastName(),
+                userRegistrationDto.email(),
+                userRegistrationDto.password(),
+                userRegistrationDto.username(),
+                false,
+                false,
+                false,
+                false,
+                null
+        );
+    }
 
-        if(user.getBudget() != null) {
-        return new UserResponseDto(
-                user.getUserId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getPassword(),
+    @Override
+    public UserInformationDto createUserInformationDto(User user, String token) {
+        return new UserInformationDto(
+                token,
+                this.createUserOnboardingStatusDto(user),
+                null
+        );
+    }
+
+    @Override
+    public UserOnboardingStatusDto createUserOnboardingStatusDto(User user) {
+        return new UserOnboardingStatusDto(
                 user.hasCompletedOnboarding(),
                 user.isHasSetMonthlyIncome(),
                 user.isHasSetBudgetCategories(),
-                user.isHasSetFixedCosts(),
-                token,
-                budgetMapper.toDto(user.getBudget())
-
+                user.isHasSetFixedCosts()
         );
-
-        } else {
-            return new UserResponseDto(
-                    user.getUserId(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getUsername(),
-                    user.getPassword(),
-                    user.hasCompletedOnboarding(),
-                    user.isHasSetMonthlyIncome(),
-                    user.isHasSetBudgetCategories(),
-                    user.isHasSetFixedCosts(),
-                    token,
-                    null
-
-            );
-        }
     }
+
+
 }

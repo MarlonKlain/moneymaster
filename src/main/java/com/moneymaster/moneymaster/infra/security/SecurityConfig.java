@@ -43,7 +43,7 @@ public class SecurityConfig {
 //                Defines which routes will require authentication
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.GET, "/api/user/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/register", "/api/login")
+                        .requestMatchers(HttpMethod.POST, "/api/user/register", "/api/user/login")
                         .permitAll()
                         .anyRequest().authenticated())
 //                Enables login form on the browser
