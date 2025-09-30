@@ -75,9 +75,8 @@ public class BudgetCategoryController {
             @RequestBody BudgetCategoryDto budgetCategoryDto
     ){
 
-        Budget budget = budgetService.getBudgetByUser(currentUser).orElseThrow(()-> new IllegalArgumentException("Budget not found for this user."));
-        BudgetCategory budgetCategoryUpdated = budgetCategoryService.updateBudgetCategory(currentUser.getId(), budgetCategoryId, budgetCategoryMapper.fromDto(budgetCategoryDto));
-        return budgetCategoryMapper.toDto(budgetCategoryUpdated, budget.getMonthlyIncome());
+        BudgetCategory budgetCategoryUpdated = budgetCategoryService.updateBudgetCategory(currentUser, budgetCategoryId, budgetCategoryDto);
+        return new BudgetCategoryDto( null,null, null,null,null,null,null,null);
     }
 
     @PostMapping(path = "/update")
