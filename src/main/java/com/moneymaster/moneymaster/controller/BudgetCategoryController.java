@@ -2,7 +2,6 @@ package com.moneymaster.moneymaster.controller;
 
 import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.budgetcategory.BudgetCategoryDto;
-import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.mappers.budgetcategory.BudgetCategoryMapper;
 import com.moneymaster.moneymaster.service.budget.BudgetService;
@@ -29,15 +28,12 @@ public class BudgetCategoryController {
         this.budgetService = budgetService;
     }
 
-    @PostMapping
+    @PostMapping(path = "/create")
     public BudgetCategoryDto createBudgetCategory(
-            @PathVariable("budgetId") UUID budgetId,
+            @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody BudgetCategoryDto budgetCategoryDto
             ){
-        BudgetCategory createdBudget = budgetCategoryService.createBudgetCategory(budgetId, budgetCategoryMapper.fromDto(budgetCategoryDto));
-
-        return budgetCategoryMapper.toDto(createdBudget, null);
-
+        return budgetCategoryService.createBudgetCategory(currentUser, budgetCategoryDto);
     }
 
     @GetMapping
@@ -55,9 +51,8 @@ public class BudgetCategoryController {
             @AuthenticationPrincipal UserPrincipal currentUser,
             @PathVariable("budgetCategoryId") UUID budgetCategoryId
     ){
-        Budget budget = budgetService.getBudgetByUser(currentUser).orElseThrow(()-> new IllegalArgumentException("Budget not found for this user."));
-        BudgetCategory budgetCategory = budgetCategoryService.getBudgetCategory(budgetCategoryId);
-        return budgetCategoryMapper.toDto(budgetCategory, budget.getMonthlyIncome());
+
+        return budgetCategoryService.getBudgetCategory(currentUser, budgetCategoryId);
     }
 
     @PostMapping(path = "/delete")
@@ -75,8 +70,7 @@ public class BudgetCategoryController {
             @RequestBody BudgetCategoryDto budgetCategoryDto
     ){
 
-        BudgetCategory budgetCategoryUpdated = budgetCategoryService.updateBudgetCategory(currentUser, budgetCategoryId, budgetCategoryDto);
-        return new BudgetCategoryDto( null,null, null,null,null,null,null,null);
+        return budgetCategoryService.updateBudgetCategory(currentUser, budgetCategoryId, budgetCategoryDto);
     }
 
     @PostMapping(path = "/update")
@@ -87,6 +81,6 @@ public class BudgetCategoryController {
 
         List<BudgetCategory> budgetCategoryList = budgetCategoryDto.stream().map(budgetCategoryMapper::fromDto).toList();
 
-        budgetCategoryService.updateBudgetCategoriesList(currentUser.getId(), budgetCategoryList);
+        budgetCategoryService.updateBudgetCategoriesList(currentUser, budgetCategoryList);
     }
 }

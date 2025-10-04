@@ -23,7 +23,7 @@ public class DashboardController {
     public DashboardDto getDashboardSummary(
             @AuthenticationPrincipal UserPrincipal currentUser
             ){
-        return dashboardService.getDashboardSummary(currentUser.getId());
+        return dashboardService.getDashboardSummary(currentUser);
     }
 
 }

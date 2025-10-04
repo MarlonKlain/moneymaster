@@ -2,6 +2,7 @@ package com.moneymaster.moneymaster.service.budgetcategory;
 
 import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.budgetcategory.BudgetCategoryDto;
+import com.moneymaster.moneymaster.model.entity.Budget;
 import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 
 import java.math.BigDecimal;
@@ -9,13 +10,14 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BudgetCategoryService {
-    BudgetCategory createBudgetCategory(UUID budgetId, BudgetCategory budgetCategory);
+    BudgetCategoryDto createBudgetCategory(UserPrincipal currentUser, BudgetCategoryDto budgetCategoryDto);
     List<BudgetCategory> createDefaultBudgetCategories (UUID budgetId);
     List<BudgetCategory> getBudgetCategories(UserPrincipal currentUser);
-    BudgetCategory getBudgetCategory(UUID budgetCategoryId);
+    BudgetCategoryDto getBudgetCategory(UserPrincipal currentUser, UUID budgetCategoryId);
     void deleteBudgetCategory(BudgetCategory budgetCategory);
-    BudgetCategory updateBudgetCategory(UserPrincipal currentUser, UUID budgetCategoryId, BudgetCategoryDto budgetCategoryDto);
-    List<BudgetCategory> updateBudgetCategoriesList (UUID userId, List<BudgetCategory> budgetCategoryList);
+    BudgetCategoryDto updateBudgetCategory(UserPrincipal currentUser, UUID budgetCategoryId, BudgetCategoryDto budgetCategoryDto);
+    List<BudgetCategory> updateBudgetCategoriesList (UserPrincipal currentUser, List<BudgetCategory> budgetCategoryList);
     BigDecimal sumFixedCosts(BudgetCategory budgetCategory);
     BigDecimal getTotal(BudgetCategory budgetCategory, BigDecimal monthlyIncome);
+    BudgetCategoryDto createBudgetCategoryDto(BudgetCategory budgetCategory, Budget budget);
 }

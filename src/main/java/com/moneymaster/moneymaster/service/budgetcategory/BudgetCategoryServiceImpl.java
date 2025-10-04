@@ -7,6 +7,7 @@ import com.moneymaster.moneymaster.model.entity.BudgetCategory;
 import com.moneymaster.moneymaster.model.entity.FixedCost;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.budgetcategory.BudgetCategoryMapper;
+import com.moneymaster.moneymaster.model.mappers.fixedcost.FixedCostMapper;
 import com.moneymaster.moneymaster.repository.BudgetCategoryRepository;
 import com.moneymaster.moneymaster.repository.BudgetRepository;
 import com.moneymaster.moneymaster.repository.UserRepository;
@@ -27,45 +28,54 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     private final UserRepository userRepository;
     private final FixedCostService fixedCostService;
     private final BudgetCategoryMapper budgetCategoryMapper;
+    private final FixedCostMapper fixedCostMapper;
 
-    public BudgetCategoryServiceImpl(BudgetCategoryRepository budgetCategoryRepository, BudgetRepository budgetRepository, UserRepository userRepository, FixedCostService fixedCostService, BudgetCategoryMapper budgetCategoryMapper){
+    public BudgetCategoryServiceImpl(BudgetCategoryRepository budgetCategoryRepository, BudgetRepository budgetRepository, UserRepository userRepository, FixedCostService fixedCostService, BudgetCategoryMapper budgetCategoryMapper, FixedCostMapper fixedCostMapper){
         this.budgetCategoryRepository = budgetCategoryRepository;
         this.budgetRepository = budgetRepository;
         this.userRepository = userRepository;
         this.fixedCostService = fixedCostService;
         this.budgetCategoryMapper = budgetCategoryMapper;
+        this.fixedCostMapper = fixedCostMapper;
     }
 
     @Override
-    public BudgetCategory createBudgetCategory(UUID budgetId, BudgetCategory budgetCategory) {
-        if(budgetCategory.getBudgetCategoryId() != null){
+    public BudgetCategoryDto createBudgetCategory(UserPrincipal currentUser, BudgetCategoryDto budgetCategoryDto) {
+        BudgetCategory budgetCategoryToCreate = budgetCategoryMapper.fromDto(budgetCategoryDto);
+
+        if(budgetCategoryToCreate.getBudgetCategoryId() != null){
             throw new IllegalArgumentException("ID must not be provided by the client!");
         }
 
-        if(budgetId == null){
+        if(currentUser.getBudgetId() == null){
             throw new IllegalArgumentException("The budget ID must be provided!.");
         }
 
-        if(budgetCategory.getPercentage() == null){
+        if(budgetCategoryToCreate.getPercentage() == null){
             throw new IllegalArgumentException("Please, provide the percentage that you want to save for this budget category.");
         }
 
-        if(budgetCategory.getName() == null){
+        if(budgetCategoryToCreate.getName() == null){
             throw new IllegalArgumentException("Please, provide the budget category's name.");
         }
 
-       Budget budget = budgetRepository.getReferenceById(budgetId);
 
-        return budgetCategoryRepository.save(
-                new BudgetCategory(
-                        null,
-                        budget,
-                        budgetCategory.getPercentage(),
-                        budgetCategory.getName(),
-                        budgetCategory.getImageUrl(),
-                        null
-                )
-        );
+        //immutable bug here
+        Budget budget = budgetRepository.getReferenceById(currentUser.getBudgetId());
+        budgetCategoryToCreate.setBudget(budget);
+
+        List<FixedCost> fixedCostImmutable = budgetCategoryToCreate.getFixedCosts();
+        List<FixedCost> fixedCostToCreate = new ArrayList<>();
+
+        fixedCostImmutable.forEach(fixedCost -> {
+            fixedCost.setBudgetCategory(budgetCategoryToCreate);
+            fixedCostToCreate.add(fixedCost);
+        });
+
+        budgetCategoryToCreate.setFixedCosts(fixedCostToCreate);
+
+        BudgetCategory budgetCategoryUpdated = budgetCategoryRepository.save(budgetCategoryToCreate);
+        return createBudgetCategoryDto(budgetCategoryUpdated, budget);
     }
 
 
@@ -80,8 +90,19 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     }
 
     @Override
-    public BudgetCategory getBudgetCategory(UUID budgetCategoryId) {
-        return budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(() -> new IllegalArgumentException("Budget Category not Found!"));
+    public BudgetCategoryDto getBudgetCategory(UserPrincipal currentUser, UUID budgetCategoryId) {
+        if(currentUser.getBudgetId() == null || budgetCategoryId == null) {
+            throw new IllegalArgumentException("Please, provided the corrects IDS");
+        }
+
+        BudgetCategory budgetCategoryToDto = budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(()-> new IllegalArgumentException("Budget category not found."));
+
+        if(!currentUser.getBudgetId().equals(budgetCategoryToDto.getBudget().getBudgetId())){
+            throw new IllegalArgumentException("Something went wrong, please provide the correct budget category");
+        }
+
+
+        return createBudgetCategoryDto(budgetCategoryToDto, budgetCategoryToDto.getBudget());
     }
 
 
@@ -95,7 +116,7 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
 
     @Override
     @Transactional
-    public BudgetCategory updateBudgetCategory(UserPrincipal currentUser, UUID budgetCategoryId, BudgetCategoryDto budgetCategoryDto) {
+    public BudgetCategoryDto updateBudgetCategory(UserPrincipal currentUser, UUID budgetCategoryId, BudgetCategoryDto budgetCategoryDto) {
 
 
         if(currentUser.getId() == null) {
@@ -133,20 +154,20 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
 
         //setting the new fixed costs in the object that will be used to update
         budgetCategoryToUpdate.setFixedCosts(fixedCostsToUpdate);
+        BudgetCategory budgetCategoryUpdated = budgetCategoryRepository.save(budgetCategoryToUpdate);
 
-        return budgetCategoryRepository.save(budgetCategoryToUpdate);
-
+        return this.createBudgetCategoryDto(budgetCategoryUpdated, budgetCategoryUpdated.getBudget());
     }
 
     @Override
     @Transactional
-    public List<BudgetCategory> updateBudgetCategoriesList(UUID userId, List<BudgetCategory> budgetCategoryList) {
+    public List<BudgetCategory> updateBudgetCategoriesList(UserPrincipal currentUser, List<BudgetCategory> budgetCategoryList) {
 
         if(budgetCategoryList.isEmpty()){
             throw new IllegalArgumentException("At least one budget category most be provided!");
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found!"));
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new IllegalArgumentException("User not found!"));
         budgetCategoryList.forEach(budgetCategory -> {
                     budgetCategory.setBudget(user.getBudget());
                 }
@@ -167,6 +188,22 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     @Override
     public BigDecimal getTotal(BudgetCategory budgetCategory, BigDecimal monthlyIncome) {
         return monthlyIncome.multiply(budgetCategory.getPercentage());
+    }
+
+    @Override
+    public BudgetCategoryDto createBudgetCategoryDto(BudgetCategory budgetCategory, Budget budget) {
+        BigDecimal total = this.getTotal(budgetCategory, budget.getMonthlyIncome());
+        BigDecimal totalFixedCosts = this.sumFixedCosts(budgetCategory);
+        BigDecimal flexibleSpending = total.subtract(totalFixedCosts);
+        return new BudgetCategoryDto(
+                budgetCategory.getBudgetCategoryId(),
+                budgetCategory.getPercentage(),
+                total,
+                budgetCategory.getName(),
+                budgetCategory.getImageUrl(),
+                totalFixedCosts,
+                flexibleSpending,
+                budgetCategory.getFixedCosts().stream().map(fixedCostMapper::toDto).toList());
     }
 
     @Override
