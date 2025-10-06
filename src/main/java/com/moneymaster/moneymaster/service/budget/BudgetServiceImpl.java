@@ -83,12 +83,8 @@ public class BudgetServiceImpl implements BudgetService{
     public Budget updateBudget(UserPrincipal currentUser, BudgetDto budget) {
 
         Budget budgetByUser = budgetMapper.fromDto(budget);
-        if(budgetByUser.getBudgetId() == null){
-            throw new IllegalArgumentException("A Budget ID must no be provided by the client!");
-        }
-
-        if(!currentUser.getBudgetId().equals(budgetByUser.getBudgetId())){
-            throw new IllegalArgumentException("Something went wrong. Please, provide the correct budget");
+        if(currentUser.getBudgetId() == null){
+            throw new IllegalArgumentException("A Budget ID must be provided by the client!");
         }
 
         Budget budgetToUpdate = budgetRepository.findById(currentUser.getBudgetId()).orElseThrow(() -> new IllegalArgumentException("Budget not found"));

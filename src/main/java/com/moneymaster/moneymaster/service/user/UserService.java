@@ -15,6 +15,6 @@ public interface UserService {
     User updateUserOnboardingStatus(UserPrincipal currentUser);
 //    User updateUsername(UUID userId, User user);
 //    List<User> getUsers();
-    User getUser(UUID userId);
+    User getUser(UserPrincipal currentUser);
 
 }

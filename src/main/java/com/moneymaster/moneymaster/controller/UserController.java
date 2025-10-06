@@ -42,7 +42,13 @@ public class UserController{
         return userService.loginUser(userLoginDto);
     }
 
-
+    @GetMapping()
+    public UserInformationDto getUserInformation(
+            @AuthenticationPrincipal UserPrincipal currentUser
+    ){
+        User userInformation = userService.getUser(currentUser);
+        return userMapper.createUserInformationDto(userInformation);
+    }
 
 //
 //    @DeleteMapping(path = "/{userId}")

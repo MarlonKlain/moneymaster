@@ -35,7 +35,7 @@ public class JWTService {
 
         Map<String, Object> claims = new HashMap<>();
 
-        Instant expirationTime = Instant.now().plus(Duration.ofHours(1));
+        Instant expirationTime = Instant.now().plus(Duration.ofDays(7));
 
         Date expirationAt = Date.from(expirationTime);
 

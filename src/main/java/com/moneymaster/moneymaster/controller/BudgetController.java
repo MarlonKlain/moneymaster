@@ -49,12 +49,12 @@ public class BudgetController {
         budgetService.deleteBudget(currentUser);
     }
 
-    @PatchMapping(path = "/{budgetId}")
+    @PatchMapping(path = "/update")
     public BudgetDto updateBudget(
             @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody BudgetDto budgetDto
             ){
-        Budget budgetUpdated = budgetService.updateBudget(currentUser,budgetMapper.fromDto(budgetDto));
+        Budget budgetUpdated = budgetService.updateBudget(currentUser, budgetDto);
 
         return budgetMapper.toDto(budgetUpdated);
     }
