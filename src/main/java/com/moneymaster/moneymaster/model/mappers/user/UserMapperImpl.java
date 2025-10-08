@@ -1,8 +1,5 @@
 package com.moneymaster.moneymaster.model.mappers.user;
-import com.moneymaster.moneymaster.model.dto.user.UserInformationDto;
-import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
-import com.moneymaster.moneymaster.model.dto.user.UserOnboardingStatusDto;
-import com.moneymaster.moneymaster.model.dto.user.UserRegistrationDto;
+import com.moneymaster.moneymaster.model.dto.user.*;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.budget.BudgetMapper;
 import org.springframework.stereotype.Component;
@@ -52,11 +49,10 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserInformationDto createUserInformationDto(User user, String token) {
-        return new UserInformationDto(
+    public UserLoginResponseDto createUserInformationDto(User user, String token) {
+        return new UserLoginResponseDto(
                 token,
-                this.createUserOnboardingStatusDto(user),
-                null
+                this.createUserOnboardingStatusDto(user)
         );
     }
 
@@ -67,6 +63,16 @@ public class UserMapperImpl implements UserMapper {
                 user.isHasSetMonthlyIncome(),
                 user.isHasSetBudgetCategories(),
                 user.isHasSetFixedCosts()
+        );
+    }
+
+    @Override
+    public UserProfileInformationDto createUserProfileInformationDto(User user) {
+        return new UserProfileInformationDto(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getUsername()
         );
     }
 

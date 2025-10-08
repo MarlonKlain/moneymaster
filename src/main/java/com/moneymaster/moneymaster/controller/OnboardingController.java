@@ -32,7 +32,7 @@ public class OnboardingController {
             @AuthenticationPrincipal UserPrincipal currentUser
     ){
 
-        User user = userService.getUser(currentUser.getId());
+        User user = userService.getUser(currentUser);
         return userMapper.createUserOnboardingStatusDto(user);
     }
 

@@ -6,8 +6,8 @@ import com.moneymaster.moneymaster.model.entity.User;
 public interface UserMapper {
     User fromUserLoginDto(UserLoginDto userLoginDto);
     User fromUserRegistrationDto(UserRegistrationDto userRegistrationDto);
-    UserInformationDto createUserInformationDto(User user, String token);
+    UserLoginResponseDto createUserInformationDto(User user, String token);
     UserOnboardingStatusDto createUserOnboardingStatusDto(User user);
-
+    UserProfileInformationDto createUserProfileInformationDto(User user);
 
 }

@@ -2,9 +2,9 @@ package com.moneymaster.moneymaster.controller;
 
 import com.moneymaster.moneymaster.model.UserPrincipal;
 import com.moneymaster.moneymaster.model.dto.ServerResponseDto;
-import com.moneymaster.moneymaster.model.dto.user.UserInformationDto;
+import com.moneymaster.moneymaster.model.dto.user.UserLoginResponseDto;
 import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
-import com.moneymaster.moneymaster.model.dto.user.UserOnboardingStatusDto;
+import com.moneymaster.moneymaster.model.dto.user.UserProfileInformationDto;
 import com.moneymaster.moneymaster.model.dto.user.UserRegistrationDto;
 import com.moneymaster.moneymaster.model.entity.User;
 import com.moneymaster.moneymaster.model.mappers.user.UserMapper;
@@ -36,18 +36,18 @@ public class UserController{
     }
 
     @PostMapping(path = "/login")
-    public UserInformationDto loginUser(
+    public UserLoginResponseDto loginUser(
             @RequestBody UserLoginDto userLoginDto
             ){
         return userService.loginUser(userLoginDto);
     }
 
     @GetMapping()
-    public UserInformationDto getUserInformation(
+    public UserProfileInformationDto getUserInformation(
             @AuthenticationPrincipal UserPrincipal currentUser
     ){
         User userInformation = userService.getUser(currentUser);
-        return userMapper.createUserInformationDto(userInformation);
+        return userMapper.createUserProfileInformationDto(userInformation);
     }
 
 //

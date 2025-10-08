@@ -2,7 +2,7 @@ package com.moneymaster.moneymaster.service.user;
 
 
 import com.moneymaster.moneymaster.model.UserPrincipal;
-import com.moneymaster.moneymaster.model.dto.user.UserInformationDto;
+import com.moneymaster.moneymaster.model.dto.user.UserLoginResponseDto;
 import com.moneymaster.moneymaster.model.dto.user.UserLoginDto;
 import com.moneymaster.moneymaster.model.dto.user.UserRegistrationDto;
 import com.moneymaster.moneymaster.model.entity.User;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserInformationDto loginUser(UserLoginDto userLoginDto) {
+    public UserLoginResponseDto loginUser(UserLoginDto userLoginDto) {
         User userToLogin = userMapper.fromUserLoginDto(userLoginDto);
         //todo Enables the login also by email
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userToLogin.getUsername(), userToLogin.getPassword()));
@@ -89,14 +88,13 @@ public class UserServiceImpl implements UserService{
         return userRepository.save(userToUpdate);
     }
 
-
     @Override
-    public User getUser(UUID userId) {
-        if(userId == null){
+    public User getUser(UserPrincipal currentUser) {
+        if(currentUser.getId() == null){
             throw new IllegalArgumentException("A User ID must be provided by the user!");
         }
 
-        return userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("User not found"));
+        return userRepository.findById(currentUser.getId()).orElseThrow(()-> new IllegalArgumentException("User not found"));
     }
 
 }
