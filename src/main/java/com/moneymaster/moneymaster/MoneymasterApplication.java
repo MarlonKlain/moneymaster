@@ -12,14 +12,4 @@ public class MoneymasterApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MoneymasterApplication.class, args);
 	}
-
-	// --- ADD THIS BEAN TO DEBUG ---
-	@Bean
-	CommandLineRunner commandLineRunner(Environment env) {
-		return args -> {
-			System.out.println("=================================================");
-			System.out.println(">>>>>> [DEBUG] SPRING_DATASOURCE_URL from Environment: " + env.getProperty("SPRING_DATASOURCE_URL"));
-			System.out.println("=================================================");
-		};
-	}
 }
