@@ -43,6 +43,12 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
     public BudgetCategoryDto createBudgetCategory(UserPrincipal currentUser, BudgetCategoryDto budgetCategoryDto) {
         BudgetCategory budgetCategoryToCreate = budgetCategoryMapper.fromDto(budgetCategoryDto);
 
+        boolean hasUserAchievedAllMonthlyIncome = userExceededMonthlyIncome(currentUser);
+
+        if(hasUserAchievedAllMonthlyIncome){
+            throw new IllegalArgumentException("You cannot exceed 100% of your monthly income");
+        }
+
         if(budgetCategoryToCreate.getBudgetCategoryId() != null){
             throw new IllegalArgumentException("ID must not be provided by the client!");
         }
@@ -195,9 +201,10 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
         BigDecimal total = this.getTotal(budgetCategory, budget.getMonthlyIncome());
         BigDecimal totalFixedCosts = this.sumFixedCosts(budgetCategory);
         BigDecimal flexibleSpending = total.subtract(totalFixedCosts);
+
         return new BudgetCategoryDto(
                 budgetCategory.getBudgetCategoryId(),
-                budgetCategory.getPercentage(),
+                budgetCategory.getPercentage().multiply(new BigDecimal("100")),
                 total,
                 budgetCategory.getName(),
                 budgetCategory.getImageUrl(),
@@ -225,5 +232,12 @@ public class BudgetCategoryServiceImpl implements BudgetCategoryService{
         return budgetCategoryRepository.saveAll(defaultBudgetCategories);
     }
 
+    @Override
+    public boolean userExceededMonthlyIncome(UserPrincipal currentUser){
+        User userToCheck = userRepository.findById(currentUser.getId()).orElseThrow(()-> new IllegalArgumentException("User not found"));
+        BigDecimal budgetPercentage = userToCheck.getBudget().getBudgetCategories().stream().map(BudgetCategory::getPercentage).reduce(BigDecimal.ZERO, BigDecimal::add);
+        //checks if the user has exceeded the 100% of his income
+        return budgetPercentage.compareTo(BigDecimal.ONE) >= 0;
+    }
 
 }

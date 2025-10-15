@@ -83,4 +83,9 @@ public class BudgetCategoryController {
 
         budgetCategoryService.updateBudgetCategoriesList(currentUser, budgetCategoryList);
     }
+
+    @GetMapping(path = "/monthly-income")
+    public boolean userExceededMonthlyIncome(@AuthenticationPrincipal UserPrincipal currentUser){
+        return budgetCategoryService.userExceededMonthlyIncome(currentUser);
+    }
 }

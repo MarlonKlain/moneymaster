@@ -6,6 +6,7 @@ import com.moneymaster.moneymaster.model.mappers.fixedcost.FixedCostMapper;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public class BudgetCategoryMapperImpl implements BudgetCategoryMapper {
         return new BudgetCategory(
                 budgetCategoryDto.budgetCategoryId(),
                 null,
-                budgetCategoryDto.percentage(),
+                budgetCategoryDto.percentage().divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP),
                 budgetCategoryDto.name(),
                 budgetCategoryDto.imageUrl(),
                 Optional.ofNullable(budgetCategoryDto.fixedCosts())

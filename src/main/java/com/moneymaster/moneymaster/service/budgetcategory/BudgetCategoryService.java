@@ -20,4 +20,5 @@ public interface BudgetCategoryService {
     BigDecimal sumFixedCosts(BudgetCategory budgetCategory);
     BigDecimal getTotal(BudgetCategory budgetCategory, BigDecimal monthlyIncome);
     BudgetCategoryDto createBudgetCategoryDto(BudgetCategory budgetCategory, Budget budget);
+    boolean userExceededMonthlyIncome(UserPrincipal currentUser);
 }
