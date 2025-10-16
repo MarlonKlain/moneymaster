@@ -6,6 +6,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE
 );
+<<<<<<< HEAD
 CREATE TABLE budgets (
     budget_id UUID PRIMARY KEY,
     user_id UUID NOT NULL,
@@ -38,3 +39,6 @@ CREATE TABLE fixed_costs (
         REFERENCES budget_categories(budget_category_id)
         ON DELETE CASCADE
 );
+=======
+
+>>>>>>> 654e0df7a4f59ae7860e88e2655b32ae3851d784
