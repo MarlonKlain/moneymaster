@@ -38,4 +38,8 @@ CREATE TABLE fixed_costs (
         FOREIGN KEY(budget_category_id)
         REFERENCES budget_categories(budget_category_id)
         ON DELETE CASCADE
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> 0637dcb95584f00b6f3c0aab7b10d60d749d3052
