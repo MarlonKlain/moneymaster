@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Budgets")
+@Table(name = "budgets")
 public class Budget {
 
     @Id

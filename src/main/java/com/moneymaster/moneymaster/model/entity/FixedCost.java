@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Fixed_Costs")
+@Table(name = "fixed_costs")
 public class FixedCost {
 
     @Id
