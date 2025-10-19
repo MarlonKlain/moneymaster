@@ -1,3 +1,0 @@
-----altering the table
---ALTER TABLE budget_categories
---ALTER COLUMN percentage TYPE NUMERIC(5, 4);
